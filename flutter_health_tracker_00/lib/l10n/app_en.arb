@@ -2,5 +2,15 @@
     "@@locale": "en",
     "appTitle": "Health Tracker",
     "loginPhone": "Enter Phone Number",
-    "loginSend": "Send OTP"
+    "loginSend": "Send OTP",
+    "patientsTitle": "Patients",
+    "noPatients": "No patients yet",
+    "addPatient": "Add Patient",
+    "editPatient": "Edit Patient",
+    "patientName": "Name",
+    "location": "Location",
+    "selectDob": "Select Date of Birth",
+    "heightCm": "Height (cm)",
+    "weightKg": "Weight (kg)",
+    "save": "Save"
 }
