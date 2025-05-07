@@ -5,12 +5,17 @@
     "loginSend": "Send OTP",
     "patientsTitle": "Patients",
     "noPatients": "No patients yet",
-    "addPatient": "Add Patient",
-    "editPatient": "Edit Patient",
     "patientName": "Name",
     "location": "Location",
     "selectDob": "Select Date of Birth",
     "heightCm": "Height (cm)",
     "weightKg": "Weight (kg)",
-    "save": "Save"
+    "addPatient": "Add Patient",
+    "editPatient": "Edit Patient",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "patientDeleted": "Patient deleted!",
+    "confirmDeletePatient": "Are you sure you want to delete this patient?",
+    "fieldRequired": "This field is required"
 }

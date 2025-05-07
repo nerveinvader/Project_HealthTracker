@@ -5,12 +5,17 @@
     "loginSend": "ارسال کد تایید",
     "patientsTitle": "بیماران",
     "noPatients": "هیچ بیماری ثبت نشده",
-    "addPatient": "افزودن بیمار",
-    "editPatient": "ویرایش بیمار",
     "patientName": "نام",
     "location": "محل زندگی",
     "selectDob": "انتخاب تاریخ تولد",
     "heightCm": "قد (سانتی متر)",
     "weightKg": "وزن (کلیوگرم)",
-    "save": "ذخیره"
+    "addPatient": "افزودن بیمار",
+    "editPatient": "ویرایش بیمار",
+    "save": "ذخیره",
+    "cancel": "انصراف",
+    "delete": "حذف",
+    "patientDeleted": "بیمار حذف شد",
+    "confirmDeletePatient": "آیا مطمئن هستید که می خواهید این بیمار را حذف کنید؟",
+    "fieldRequired": "این فیلد الزامی است"
 }

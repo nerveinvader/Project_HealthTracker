@@ -23,15 +23,47 @@ class _PatientListScreenState extends State<PatientListScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch patients from the database
-    _patientsFuture = db.select(db.patients).get();
+    _loadPatients();
   }
 
-  // Refresh the patient list
-  void _refreshList() {
+  // Load patients from the database
+  void _loadPatients() {
     setState(() {
       _patientsFuture = db.select(db.patients).get();
     });
+  }
+
+  // Delete a patient after confirmation
+  Future<void> _deletePatient(BuildContext context, Patient patient) async {
+    // Capture context
+    final navContext = context;
+
+    final confirm = await showDialog<bool>(
+      context: navContext,
+      builder: (_) => AlertDialog(
+        title: Text(AppLocalizations.of(navContext)!.editPatient),
+        content: Text(AppLocalizations.of(navContext)!.confirmDeletePatient),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(navContext).pop(false),
+            child: Text(AppLocalizations.of(navContext)!.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(navContext).pop(true),
+            child: Text(AppLocalizations.of(navContext)!.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await db.delete(db.patients).delete(patient.id);
+      if (!mounted) return; // Check if the widget is still mounted
+      _loadPatients(); // Refresh the list after deletion
+      ScaffoldMessenger.of(navContext).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(navContext)!.patientDeleted))
+      );
+    }
   }
 
   @override
@@ -53,22 +85,40 @@ class _PatientListScreenState extends State<PatientListScreen> {
           if (patients.isEmpty) {
             return Center(child: Text(AppLocalizations.of(context)!.noPatients));
           }
+          // ListView with dismissible to enable swipe to delete
           return ListView.builder(
             itemCount: patients.length,
             itemBuilder: (context, index) {
               final p = patients[index];
-              return ListTile(
+              return Dismissible(
+                key: ValueKey(p.id),
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  color: Theme.of(context).colorScheme.secondary,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ),
+                onDismissed: (_) async {
+                  await db.delete(db.patients).delete(p.id);
+                  if (mounted) _loadPatients;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(AppLocalizations.of(context)!.patientDeleted)),
+                  );
+                },
+                child: ListTile(
                 title: Text(p.name),
                 subtitle: Text(p.location),
                 onTap: () async {
                   // Navigate to form in edit mode and refresh afterward
+                  final navContext = context;
                   await Navigator.push(
-                    context,
+                    navContext,
                     MaterialPageRoute(
                       builder: (_) => PatientFormScreen(patient: p),
                     ),
                   );
-                  _refreshList();
+                  if (mounted) _loadPatients();
                 },
               );
             },
@@ -78,13 +128,14 @@ class _PatientListScreenState extends State<PatientListScreen> {
       floatingActionButton: FloatingActionButton (
         onPressed: () async {
           // Navigate to empty form to add a new patient
+          final navContext = context;
           await Navigator.push(
-            context,
+            navContext,
             MaterialPageRoute (
               builder: (_) => const PatientFormScreen(),
             ),
           );
-          _refreshList();
+          if (mounted) _loadPatients();
         },
         child: const Icon(Icons.add),
       ),
