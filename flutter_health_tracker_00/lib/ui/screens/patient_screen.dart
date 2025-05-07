@@ -65,6 +65,8 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
 
   Future<void> _savePatient() async {
     if (!_formkey.currentState!.validate() || _selectedDob == null) return;
+    final navContext = context;
+
     final comp = PatientsCompanion(
       id:widget.patient?.id != null ? Value(widget.patient!.id) : Value.absent(),
       name: Value(_nameController.text),
@@ -79,7 +81,8 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
     } else {
       await db.update(db.patients).replace(comp);
     }
-    Navigator.pop(context);
+    if (!mounted) return;
+    Navigator.pop(navContext);
   }
 
 @override
