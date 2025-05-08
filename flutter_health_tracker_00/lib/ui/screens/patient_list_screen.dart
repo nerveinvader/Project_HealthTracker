@@ -4,9 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_health_tracker_00/ui/screens/patient_screen.dart';
-import '../../data/local/app_db.dart';
 import 'patient_form_screen.dart';
+import '../../data/local/app_db.dart';
 
 final AppDatabase db = AppDatabase(); // Initialize the database
 
@@ -57,7 +56,9 @@ class _PatientListScreenState extends State<PatientListScreen> {
     );
 
     if (confirm == true) {
-      await db.delete(db.patients).delete(patient.id);
+      await (db.delete(db.patients)
+          ..where((t) => t.id.equals(patient.id)))
+          .go(); // Delete the patient from the database
       if (!mounted) return; // Check if the widget is still mounted
       _loadPatients(); // Refresh the list after deletion
       ScaffoldMessenger.of(navContext).showSnackBar(
@@ -100,7 +101,9 @@ class _PatientListScreenState extends State<PatientListScreen> {
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
                 onDismissed: (_) async {
-                  await db.delete(db.patients).delete(p.id);
+                  await (db.delete(db.patients)
+                      ..where((t) => t.id.equals(p.id)))
+                      .go(); // Delete the patient from the database
                   if (mounted) _loadPatients;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(AppLocalizations.of(context)!.patientDeleted)),
@@ -120,6 +123,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
                   );
                   if (mounted) _loadPatients();
                 },
+                ),
               );
             },
           );
