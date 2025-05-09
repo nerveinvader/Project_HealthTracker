@@ -3,13 +3,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SmsService {
   final _dio = Dio(BaseOptions(baseUrl: dotenv.env['SMS_API_URL']!));
-  final String _apiKey = dotenv.env['SMS_API_KEY']!;
 
   Future<void> sendOtp(String phoneNumber) async {
-  final response = await _dio.get('/v1/$_apiKey/sms/send.json', queryParameters: {
-    'receptor': phoneNumber,
-    'message': 'Your Health Tracker OTP code is: 123456', // Replace with actual OTP generation logic
-  });
+    final String _apiKey = dotenv.env['SMS_API_KEY']!;
+    final response = await _dio.get('/v1/$_apiKey/sms/send.json', queryParameters: {
+      'receptor': phoneNumber,
+      'message': 'Your Health Tracker OTP code is: 123456', // Replace with actual OTP generation logic
+    });
   // Parse Response and handle errors if needed
   }
 

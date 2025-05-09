@@ -1,5 +1,6 @@
 // login_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/remote/sms_service.dart';
 import 'otp_screen.dart';
@@ -30,10 +31,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 final navContext = context;
                 await _sms.sendOtp(phone);
                 if (!mounted) return;
-                Navigator.push(
-                  navContext,
-                  MaterialPageRoute(builder: (_) => OtpScreen(phone: phone))
-                );
+                if (dotenv.env['SMS_API_KEY'] == null) {
+                  Navigator.pushReplacementNamed(
+                    navContext,
+                    '/patients'
+                  );
+                } else {
+                  Navigator.push(
+                    navContext,
+                    MaterialPageRoute(builder: (_) => OtpScreen(phone: phone))
+                  );
+                }
               },
               child: Text(AppLocalizations.of(context)!.loginSend),
               ),
