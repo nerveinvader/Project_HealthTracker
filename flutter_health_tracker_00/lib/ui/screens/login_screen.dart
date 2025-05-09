@@ -1,4 +1,7 @@
-// login_screen.dart
+// Description: Login Screen
+// User Page
+// The first page to register on the DB.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

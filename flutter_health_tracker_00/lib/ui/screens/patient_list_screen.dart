@@ -1,5 +1,6 @@
 // Description: Patient List Screen
-// Lists all patients in the DB and navigates to the patient form screen
+// Admin Page
+// Lists of all patients in the DB and navigates to the patient form screen
 // to add or edit patients
 
 import 'package:flutter/material.dart';

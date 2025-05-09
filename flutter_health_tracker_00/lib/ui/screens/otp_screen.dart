@@ -1,4 +1,7 @@
-// otp_screen.dart
+// Description: OTP Screen
+// User Page
+// The page to get OTP code and verify it, to register the user.
+
 import 'package:flutter/material.dart';
 import '../../data/remote/sms_service.dart';
 

@@ -17,5 +17,12 @@
     "delete": "حذف",
     "patientDeleted": "بیمار حذف شد",
     "confirmDeletePatient": "آیا مطمئن هستید که می خواهید این بیمار را حذف کنید؟",
-    "fieldRequired": "این فیلد الزامی است"
+    "fieldRequired": "این فیلد الزامی است",
+    "labDeleted": "آزمایش حذف شد",
+    "noLabEntries": "آزمایشی پیدا نشد",
+    "confirmDeleteLab": "آیا مطمئن هستید که می خواهید این آزمایش را حذف کنید؟",
+    "addLabEntry": "آزمایش را وارد کنید",
+    "editLabEntry": "آزمایش را ویرایش کنید",
+    "labType": "نوع و اسم آزمایش",
+    "labValue": "نتیجه آزمایش"
 }
