@@ -60,7 +60,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
     );
     if (confirmed == true) {
       await db.delete(db.labEntries).delete(entry);
-      if (!mounted) return;
+      if (!navContext.mounted) return;
       _loadLabEntries();
       ScaffoldMessenger.of(navContext).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(navContext)!.labDeleted)),

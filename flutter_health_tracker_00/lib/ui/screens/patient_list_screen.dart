@@ -60,7 +60,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
       await (db.delete(db.patients)
           ..where((t) => t.id.equals(patient.id)))
           .go(); // Delete the patient from the database
-      if (!mounted) return; // Check if the widget is still mounted
+      if (!navContext.mounted) return; // Check if the widget is still mounted
       _loadPatients(); // Refresh the list after deletion
       ScaffoldMessenger.of(navContext).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(navContext)!.patientDeleted))
@@ -105,7 +105,8 @@ class _PatientListScreenState extends State<PatientListScreen> {
                   await (db.delete(db.patients)
                       ..where((t) => t.id.equals(p.id)))
                       .go(); // Delete the patient from the database
-                  if (mounted) _loadPatients;
+                  if (context.mounted) _loadPatients;
+                  if (!context.mounted) return; // Check if the widget is still mounted
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(AppLocalizations.of(context)!.patientDeleted)),
                   );

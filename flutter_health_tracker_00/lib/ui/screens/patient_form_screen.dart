@@ -82,7 +82,7 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
     } else {
       await db.update(db.patients).replace(comp);
     }
-    if (!mounted) return;
+    if (!navContext.mounted) return;
     Navigator.pop(navContext);
   }
 
@@ -146,6 +146,7 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
                 validator: (v) => v!.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 16),
+              // Gender Picker
               // Save Button
               ElevatedButton(
                 onPressed: _savePatient,

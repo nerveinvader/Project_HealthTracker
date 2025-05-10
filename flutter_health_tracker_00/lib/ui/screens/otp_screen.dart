@@ -32,7 +32,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 final messengerContext = context;
 
                 final isValid = await _sms.verifyOtp(widget.phone, code);
-                if (!mounted) return;
+                if (!navContext.mounted) return;
                 if (isValid) {
                   Navigator.pushReplacementNamed(
                     navContext,

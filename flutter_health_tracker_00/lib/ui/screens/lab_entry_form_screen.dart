@@ -71,7 +71,7 @@ class _LabEntryFormScreenState extends State<LabEntryFormScreen> {
     } else {
       await db.update(db.labEntries).replace(comp);
     }
-    if (!mounted) return;
+    if (!navContext.mounted) return;
     Navigator.pop(navContext);
   }
 

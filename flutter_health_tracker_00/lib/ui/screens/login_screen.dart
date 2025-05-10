@@ -33,18 +33,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 final phone = _phoneController.text;
                 final navContext = context;
                 await _sms.sendOtp(phone);
-                if (!mounted) return;
-                if (dotenv.env['SMS_API_KEY'] == null) {
-                  Navigator.pushReplacementNamed(
-                    navContext,
-                    '/patients'
-                  );
-                } else {
-                  Navigator.push(
-                    navContext,
-                    MaterialPageRoute(builder: (_) => OtpScreen(phone: phone))
-                  );
-                }
+                if (!navContext.mounted) return;
+                Navigator.push(
+                  navContext,
+                  MaterialPageRoute(builder: (_) => OtpScreen(phone: phone))
+                );
               },
               child: Text(AppLocalizations.of(context)!.loginSend),
               ),
