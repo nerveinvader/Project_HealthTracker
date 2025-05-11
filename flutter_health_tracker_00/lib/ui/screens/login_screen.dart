@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ElevatedButton(onPressed: () async {
                 final phone = _phoneController.text;
                 final navContext = context;
-                await _sms.sendOtp(phone);
+                //await _sms.sendOtp(phone);
                 if (!navContext.mounted) return;
                 Navigator.push(
                   navContext,
