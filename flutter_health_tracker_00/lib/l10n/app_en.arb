@@ -25,5 +25,10 @@
     "editLabEntry": "Edit a Lab Entry",
     "labDate": "Date of Lab",
     "labType": "Type of Lab",
-    "labValue": "Result of Lab"
+    "labValue": "Result of Lab",
+    "medication": "Medication Name",
+    "medDosage": "Medication Dosage",
+    "medFrequency": "Medication Frequency",
+    "medStart": "Medication Start Date",
+    "medEnd": "Medication End Date"
 }

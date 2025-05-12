@@ -25,5 +25,13 @@
     "editLabEntry": "آزمایش را ویرایش کنید",
     "labDate": "تاریخ آزمایش",
     "labType": "نوع آزمایش",
-    "labValue": "نتیجه آزمایش"
+    "labValue": "نتیجه آزمایش",
+    "medication": "نام دارو",
+    "medDosage": "دوز دارو",
+    "medFrequency": "تواتر دارو",
+    "medStart": "تاریخ شروع دارو",
+    "medEnd": "تاریخ پایان دارو",
+    "viewLabs": "دیدن آزمایشات",
+    "viewMeds": "دیدن داروها",
+    "other": "دیگر موارد"
 }

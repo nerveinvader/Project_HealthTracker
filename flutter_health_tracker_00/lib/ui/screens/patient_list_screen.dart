@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_detail_screen.dart';
+import 'medication_list_screen.dart';
 import 'patient_form_screen.dart';
 import '../../data/local/app_db.dart';
 
@@ -34,7 +35,55 @@ class _PatientListScreenState extends State<PatientListScreen> {
     });
   }
 
-  // Delete a patient after confirmation
+  // Show popup options to choose action for a patient
+  Future<void> _showPatientAction(Patient p) async {
+    final navContext = context;
+    final choice = await showModalBottomSheet<String>(
+      context: navContext,
+      builder: (_) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.biotech),
+                title: Text(AppLocalizations.of(navContext)!.viewLabs),
+                onTap: () => Navigator.pop(navContext, 'labs'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.medication),
+                title: Text(AppLocalizations.of(navContext)!.viewMeds),
+                onTap: () => Navigator.pop(navContext, 'meds'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.more_horiz),
+                title: Text(AppLocalizations.of(navContext)!.other),
+                onTap: () => Navigator.pop(navContext, 'other'),
+              ),
+            ],
+          ));
+      });
+    if (choice == null) return; // User canceled the action
+    if (choice == 'labs') {
+      if (!navContext.mounted) return;
+      await Navigator.push(
+        navContext,
+        MaterialPageRoute(builder: (_) => PatientDetailScreen(patient: p),
+        ),
+      );
+    } else if (choice == 'meds') {
+      if (!navContext.mounted) return;
+      await Navigator.push(
+        navContext,
+        MaterialPageRoute(builder: (_) => MedicationListScreen(patientId: p.id),
+        ),
+      );
+    } else if (choice == 'others') {
+      // TODO OTHER STUFF
+    }
+  }
+
+
+  /* Delete a patient after confirmation
   Future<void> _deletePatient(BuildContext context, Patient patient) async {
     // Capture context
     final navContext = context;
@@ -68,6 +117,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
       );
     }
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -93,39 +143,27 @@ class _PatientListScreenState extends State<PatientListScreen> {
             itemCount: patients.length,
             itemBuilder: (context, index) {
               final p = patients[index];
-              return Dismissible(
-                key: ValueKey(p.id),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  color: Theme.of(context).colorScheme.secondary,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                onDismissed: (_) async {
-                  await (db.delete(db.patients)
-                      ..where((t) => t.id.equals(p.id)))
-                      .go(); // Delete the patient from the database
-                  if (context.mounted) _loadPatients;
-                  if (!context.mounted) return; // Check if the widget is still mounted
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.of(context)!.patientDeleted)),
-                  );
-                },
-                child: ListTile(
+              return ListTile(
                 title: Text(p.name),
                 subtitle: Text(p.location),
-                onTap: () async {
-                  // Navigate to form in edit mode and refresh afterward
-                  final navContext = context;
+                onTap: () => _showPatientAction(p),
+                onLongPress: () async {
                   await Navigator.push(
-                    navContext,
-                    MaterialPageRoute(
-                      builder: (_) => PatientDetailScreen(patient: p),
+                    context,
+                    MaterialPageRoute(builder: (_) => PatientFormScreen(patient: p),
                     ),
                   );
                   if (mounted) _loadPatients();
                 },
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () async {
+                    await db.delete(db.patients).delete(p);
+                    _loadPatients();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(AppLocalizations.of(context)!.patientDeleted))
+                    );
+                  },
                 ),
               );
             },
