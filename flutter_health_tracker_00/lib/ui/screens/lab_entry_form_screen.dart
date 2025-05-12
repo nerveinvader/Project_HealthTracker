@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../data/local/app_db.dart';
 
 const List<String> labTypes = [
@@ -24,6 +25,7 @@ class LabEntryFormScreen extends StatefulWidget {
 
 class _LabEntryFormScreenState extends State<LabEntryFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  Jalali? _dateJalali;
   DateTime _date = DateTime.now();
   String _type = labTypes.first;
   final _valueCtl = TextEditingController();
@@ -32,7 +34,11 @@ class _LabEntryFormScreenState extends State<LabEntryFormScreen> {
   void initState() {
     super.initState();
     if (widget.entry != null) {
-      _date = widget.entry!.date;
+      // Lab Date
+      final existing = widget.entry!.date;
+      _dateJalali = Jalali.fromDateTime(existing);
+      _date = existing;
+      // Lab Type
       _type = widget.entry!.type;
       _valueCtl.text = widget.entry!.value.toString();
     }
@@ -44,15 +50,23 @@ class _LabEntryFormScreenState extends State<LabEntryFormScreen> {
     super.dispose();
   }
 
-  /// Show date picker and update [_date]
+  // Persian Date Picker
   Future<void> _pickDate() async {
-    final picked = await showDatePicker(
+    Jalali? picked = await showPersianDatePicker(
       context: context,
-      initialDate: _date,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+      locale: const Locale('fa', 'IR'),
+      initialDate: Jalali.now(),
+      firstDate: Jalali(1300, 1),
+      lastDate: Jalali.now(),
+      initialEntryMode: PersianDatePickerEntryMode.calendarOnly,
+      initialDatePickerMode: PersianDatePickerMode.year,
     );
-    if (picked != null) setState(() => _date = picked);
+    if (picked != null) {
+      setState(() {
+        _dateJalali = picked;
+        _date = picked.toDateTime(); // Dart time for storage
+      });
+    }
   }
 
   /// Validate form and save or update the LabEntry
@@ -91,7 +105,10 @@ class _LabEntryFormScreenState extends State<LabEntryFormScreen> {
             children: [
               // Date picker
               ListTile(
-                title: Text(DateFormat.yMMMd('fa').format(_date)),
+                title: Text(_dateJalali == null
+                  ? AppLocalizations.of(context)!.labDate
+                  : _dateJalali!.formatFullDate()
+                ),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: _pickDate,
               ),

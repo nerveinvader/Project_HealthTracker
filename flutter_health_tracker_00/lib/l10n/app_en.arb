@@ -23,6 +23,7 @@
     "confirmDeleteLab": "Are you sure you want to delete this lab entry?",
     "addLabEntry": "Add a Lab Entry",
     "editLabEntry": "Edit a Lab Entry",
+    "labDate": "Date of Lab",
     "labType": "Type of Lab",
     "labValue": "Result of Lab"
 }

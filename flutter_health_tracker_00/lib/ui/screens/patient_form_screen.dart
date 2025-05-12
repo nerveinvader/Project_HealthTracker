@@ -131,7 +131,7 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
               ListTile(
                 title: Text(_selectedJalali == null
                   ? AppLocalizations.of(context)!.selectDob
-                  : _selectedJalali!.formatCompactDate()
+                  : _selectedJalali!.formatFullDate()
                 ),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: _pickDob,

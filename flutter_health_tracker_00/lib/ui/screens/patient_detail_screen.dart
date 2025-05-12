@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../data/local/app_db.dart';
 import 'lab_entry_form_screen.dart';
 
@@ -71,7 +72,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final p = widget.patient;
-    final formattedDate = DateFormat.yMMMd('fa').format(p.dateOfBirth.toLocal());
+    //final formattedDate = Jalali.fromDateTime(p.dateOfBirth); // Jalali format
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -81,7 +82,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
             Text(p.name),
             const SizedBox(height: 4),
             Text(
-              '${p.location} $formattedDate',
+              p.location,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
@@ -115,7 +116,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                 ),
                 onDismissed: (_) => _deleteLabEntry(context, lab),
                 child: ListTile(
-                  title: Text('${lab.type}: \${lab.value}'),
+                  title: Text('${lab.type}: ${lab.value}'),
                   subtitle: Text(DateFormat.yMMMd('fa').format(lab.date)),
                   onTap: () async {
                     final navContext = context;
