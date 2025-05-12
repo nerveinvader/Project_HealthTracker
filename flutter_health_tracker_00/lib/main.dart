@@ -31,17 +31,17 @@ class HealthTracker extends StatelessWidget {
           secondary: const Color(0xFFD8315B),
         ),
       ),
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('fa', 'IR'), // Set the default locale to Persian (fa)
       localizationsDelegates: const [
+        PersianMaterialLocalizations.delegate,
+        PersianCupertinoLocalizations.delegate,
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
-        PersianMaterialLocalizations.delegate,
-        PersianCupertinoLocalizations.delegate,
       ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('fa', 'IR'), // Set the default locale to Persian (fa)
-      // Routes Map
+      // Routes Maps
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginScreen(),

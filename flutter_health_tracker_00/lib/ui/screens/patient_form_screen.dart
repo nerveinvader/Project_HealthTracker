@@ -134,21 +134,7 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
                   : _selectedJalali!.formatCompactDate()
                 ),
                 trailing: const Icon(Icons.calendar_today),
-                onTap: () async {
-                  Jalali? picked = await showPersianDatePicker(
-                    context: context,
-                    initialDate: Jalali.now(),
-                    firstDate: Jalali(1300, 1),
-                    lastDate: Jalali.now(),
-                    initialEntryMode: PersianDatePickerEntryMode.calendarOnly,
-                  );
-                  if (picked != null && picked != _selectedJalali) {
-                    setState(() {
-                      _selectedJalali = picked;
-                      _selectedDob = picked.toDateTime();
-                    });
-                  }
-                },
+                onTap: _pickDob,
               ),
               // Height field
               TextFormField(
