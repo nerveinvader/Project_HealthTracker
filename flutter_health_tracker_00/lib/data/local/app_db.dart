@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart'; // To use native SQLite database
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart'; // Uncomment if you need to use Cupertino widgets
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as p;
@@ -36,7 +36,7 @@ class MedicationEntries extends Table {
 }
 
 
-@DriftDatabase(tables: [Patients, LabEntries])
+@DriftDatabase(tables: [Patients, LabEntries, MedicationEntries])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
   @override int get schemaVersion => 1; // Increment this when you change your schema
