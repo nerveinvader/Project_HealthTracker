@@ -83,7 +83,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
   }
 
 
-  /* Delete a patient after confirmation
+  // Delete a patient after confirmation
   Future<void> _deletePatient(BuildContext context, Patient patient) async {
     // Capture context
     final navContext = context;
@@ -117,7 +117,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
       );
     }
   }
-  */
+
 
   @override
   Widget build(BuildContext context) {
@@ -157,13 +157,15 @@ class _PatientListScreenState extends State<PatientListScreen> {
                 },
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () async {
+                  onPressed: () => _deletePatient(context, p) /* () async {
                     await db.delete(db.patients).delete(p);
                     _loadPatients();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(AppLocalizations.of(context)!.patientDeleted))
-                    );
-                  },
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(AppLocalizations.of(context)!.patientDeleted))
+                      );
+                    }
+                  },*/
                 ),
               );
             },

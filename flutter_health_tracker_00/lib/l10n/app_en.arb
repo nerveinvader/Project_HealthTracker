@@ -30,5 +30,8 @@
     "medDosage": "Medication Dosage",
     "medFrequency": "Medication Frequency",
     "medStart": "Medication Start Date",
-    "medEnd": "Medication End Date"
+    "medEnd": "Medication End Date",
+    "viewLabs": "View Labs",
+    "viewMeds": "View Medications",
+    "other": "Other"
 }
