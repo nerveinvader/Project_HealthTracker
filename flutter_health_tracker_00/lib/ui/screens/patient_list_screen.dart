@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_health_tracker_00/ui/screens/patient_detail_screen.dart';
 import 'patient_form_screen.dart';
 import '../../data/local/app_db.dart';
 
@@ -120,7 +121,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
                   await Navigator.push(
                     navContext,
                     MaterialPageRoute(
-                      builder: (_) => PatientFormScreen(patient: p),
+                      builder: (_) => PatientDetailScreen(patient: p),
                     ),
                   );
                   if (mounted) _loadPatients();
@@ -131,6 +132,7 @@ class _PatientListScreenState extends State<PatientListScreen> {
           );
         },
       ),
+      // FAB to Add new patients
       floatingActionButton: FloatingActionButton (
         onPressed: () async {
           // Navigate to empty form to add a new patient

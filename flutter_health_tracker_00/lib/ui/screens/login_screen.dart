@@ -34,12 +34,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 final navContext = context;
                 //await _sms.sendOtp(phone);
                 if (!navContext.mounted) return;
-                Navigator.push(
+                Navigator.pushReplacement(
                   navContext,
                   MaterialPageRoute(builder: (_) => OtpScreen(phone: phone))
                 );
               },
               child: Text(AppLocalizations.of(context)!.loginSend),
+              ),
+              // TEST: SKIP BUTTON
+              const SizedBox(height: 16.0),
+              ElevatedButton(onPressed: () {
+                Navigator.pushReplacementNamed(context, '/patients');
+              },
+              child: Text("TEST - SKIP"),
               ),
             ],
           ),

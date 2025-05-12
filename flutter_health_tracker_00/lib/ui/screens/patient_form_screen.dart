@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../data/local/app_db.dart';
 
 class PatientFormScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
   final _locController = TextEditingController();
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
+  Jalali? _selectedJalali;
   DateTime? _selectedDob;
 
   @override
@@ -35,7 +37,10 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
       _locController.text = p.location;
       _heightController.text = p.height.toString();
       _weightController.text = p.weight.toString();
-      _selectedDob = p.dateOfBirth;
+      // Date Picker Jalali and Georgian
+      final existing = widget.patient!.dateOfBirth;
+      _selectedJalali = Jalali.fromDateTime(existing);
+      _selectedDob = existing;
     }
   }
 
@@ -48,18 +53,21 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
     super.dispose();
   }
 
+  // Persian Date of Birth Picker
   Future<void> _pickDob() async {
-    final now = DateTime.now();
-    final initial = _selectedDob ?? now;
-    final picked = await showDatePicker(
+    Jalali? picked = await showPersianDatePicker(
       context: context,
-      initialDate: initial,
-      firstDate: DateTime(1900),
-      lastDate: now,
+      locale: const Locale('fa', 'IR'),
+      initialDate: Jalali.now(),
+      firstDate: Jalali(1300, 1),
+      lastDate: Jalali.now(),
+      initialEntryMode: PersianDatePickerEntryMode.calendarOnly,
+      initialDatePickerMode: PersianDatePickerMode.year,
     );
     if (picked != null) {
       setState(() {
-        _selectedDob = picked;
+        _selectedJalali = picked;
+        _selectedDob = picked.toDateTime(); // Dart time for storage
       });
     }
   }
@@ -119,13 +127,28 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              // Date of Birth field
+              // Date of Birth field (JALALI)
               ListTile(
-                title: Text(_selectedDob == null
-                    ? AppLocalizations.of(context)!.selectDob
-                    : DateFormat.yMMMd('fa').format(_selectedDob!)),
+                title: Text(_selectedJalali == null
+                  ? AppLocalizations.of(context)!.selectDob
+                  : _selectedJalali!.formatCompactDate()
+                ),
                 trailing: const Icon(Icons.calendar_today),
-                onTap: _pickDob,
+                onTap: () async {
+                  Jalali? picked = await showPersianDatePicker(
+                    context: context,
+                    initialDate: Jalali.now(),
+                    firstDate: Jalali(1300, 1),
+                    lastDate: Jalali.now(),
+                    initialEntryMode: PersianDatePickerEntryMode.calendarOnly,
+                  );
+                  if (picked != null && picked != _selectedJalali) {
+                    setState(() {
+                      _selectedJalali = picked;
+                      _selectedDob = picked.toDateTime();
+                    });
+                  }
+                },
               ),
               // Height field
               TextFormField(
