@@ -27,6 +27,15 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
   Jalali? _selectedJalali;
   DateTime? _selectedDob;
 
+  String _normalizeNumber(String input) {
+  const persianNums = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  const englishNums = ['0','1','2','3','4','5','6','7','8','9'];
+  for (var i = 0; i < persianNums.length; i++) {
+    input = input.replaceAll(persianNums[i], englishNums[i]);
+  }
+  return input;
+}
+
   @override
   void initState() {
     super.initState();
@@ -75,14 +84,15 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
   Future<void> _savePatient() async {
     if (!_formkey.currentState!.validate() || _selectedDob == null) return;
     final navContext = context;
-
+    final heightText = _normalizeNumber(_heightController.text);
+    final weightText = _normalizeNumber(_weightController.text);
     final comp = PatientsCompanion(
       id:widget.patient?.id != null ? Value(widget.patient!.id) : Value.absent(),
       name: Value(_nameController.text),
       location: Value(_locController.text),
       dateOfBirth: Value(_selectedDob!),
-      height: Value(double.parse(_heightController.text)),
-      weight: Value(double.parse(_weightController.text)),
+      height: Value(double.parse(heightText)),
+      weight: Value(double.parse(weightText)),
     );
     // Insert or Update based on the presence of widget.patient
     if (widget.patient == null) {

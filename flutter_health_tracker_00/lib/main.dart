@@ -26,7 +26,7 @@ class HealthTracker extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xFF2A9DF4),
         scaffoldBackgroundColor: const Color(0xFFD0EFFF),
-        fontFamily: 'Helvetica',
+        fontFamily: 'Vazir',
         colorScheme: ColorScheme.fromSwatch().copyWith(
           secondary: const Color(0xFFD8315B),
         ),
