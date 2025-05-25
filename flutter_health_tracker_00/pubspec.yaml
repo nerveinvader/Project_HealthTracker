@@ -76,15 +76,15 @@ flutter:
   generate: true
   uses-material-design: true
 
-  assets:
-    - .env
-
   fonts:
     - family: Vazir
       fonts:
-        - asset: fonts/Vazir-Regular.ttf
-        - asset: fonts/Vazir-Bold.ttf
+        - asset: asset/font/Vazir-Regular.ttf
+        - asset: asset/font/Vazir-Bold.ttf
           weight: 700
+
+  assets:
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:
