@@ -39,7 +39,21 @@ class MedicationEntries extends Table {
 @DriftDatabase(tables: [Patients, LabEntries, MedicationEntries])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
-  @override int get schemaVersion => 1; // Increment this when you change your schema
+  @override int get schemaVersion => 2; // Increment this when you change your schema
+  // How to Upgrade
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) async {
+      await m.createAll();
+    },
+    onUpgrade: (migrator, from, to) async {
+      if (from == 1) {
+        // if upgrading from v1 > v2, create new medicationentries table
+        await migrator.createTable(medicationEntries);
+      }
+      // other upgrades for future
+    },
+  );
 }
 
 LazyDatabase _openConnection() {
