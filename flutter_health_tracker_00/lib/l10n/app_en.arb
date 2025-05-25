@@ -41,5 +41,10 @@
     "confirmDeleteMed": "Are you sure you want to delete this medication?",
     "medDeleted": "Medication Deleted",
     "viewMeds": "View Medications",
+    "q24hr": "Daily",
+    "q12hr": "Every 12h",
+    "q8hr": "Every 8h",
+    "q6hr": "Every 6h",
+    "q4hr": "Every 4h",
     "other": "Other"
 }

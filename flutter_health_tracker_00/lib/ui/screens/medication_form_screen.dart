@@ -71,7 +71,11 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
   }
 
   Future<void> _saveMed() async {
-    if (!_formKey.currentState!.validate()) return;
+    debugPrint('_saveMed Called');
+    if (!_formKey.currentState!.validate()) {
+        debugPrint('_saveMed no Valid');
+        return;
+    }
     // Parse dosage string to double if provided
     double? dosageValue;
     if (_dosageCtl.text.isNotEmpty) {
@@ -110,6 +114,14 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final locOpt = AppLocalizations.of(context)!;
+    final freqOptions = <String>[
+    locOpt.q24hr,
+    locOpt.q12hr,
+    locOpt.q8hr,
+    locOpt.q6hr,
+    locOpt.q4hr,
+  ];
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.entry == null
@@ -138,10 +150,22 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                     keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: _freqCtl,
+              DropdownButtonFormField(
+                value: _freqCtl.text.isNotEmpty
+                    ? _freqCtl.text
+                    : freqOptions.first,
                 decoration: InputDecoration(
                     labelText: AppLocalizations.of(context)!.medFrequency),
+                items: freqOptions
+                    .map((f) => DropdownMenuItem(
+                        value: f,
+                        child: Text(f)))
+                    .toList(),
+                onChanged: (v) {
+                    setState(() {
+                      _freqCtl.text = v!;
+                    });
+                },
               ),
               const SizedBox(height: 8),
               ListTile(
