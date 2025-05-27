@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_health_tracker_00/ui/screens/chart_view_screen.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_detail_screen.dart';
 import 'medication_list_screen.dart';
 import 'patient_form_screen.dart';
@@ -46,13 +47,18 @@ class _PatientListScreenState extends State<PatientListScreen> {
             children: [
               ListTile(
                 leading: const Icon(Icons.biotech),
-                title: Text(AppLocalizations.of(navContext)!.viewLabs),
+                title: Text(AppLocalizations.of(navContext)!.labTitle),
                 onTap: () => Navigator.pop(navContext, 'labs'),
               ),
               ListTile(
                 leading: const Icon(Icons.medication),
-                title: Text(AppLocalizations.of(navContext)!.viewMeds),
+                title: Text(AppLocalizations.of(navContext)!.medicationTitle),
                 onTap: () => Navigator.pop(navContext, 'meds'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.show_chart),
+                title: Text(AppLocalizations.of(navContext)!.chartTitle),
+                onTap: () => Navigator.pop(navContext, 'chart'),
               ),
               ListTile(
                 leading: const Icon(Icons.more_horiz),
@@ -63,21 +69,28 @@ class _PatientListScreenState extends State<PatientListScreen> {
           ));
       });
     if (choice == null) return; // User canceled the action
-    if (choice == 'labs') {
+    if (choice == 'labs') { // Lab View
       if (!navContext.mounted) return;
       await Navigator.push(
         navContext,
         MaterialPageRoute(builder: (_) => PatientDetailScreen(patient: p),
         ),
       );
-    } else if (choice == 'meds') {
+    } else if (choice == 'meds') { // Medication View
       if (!navContext.mounted) return;
       await Navigator.push(
         navContext,
         MaterialPageRoute(builder: (_) => MedicationListScreen(patientId: p.id),
         ),
       );
-    } else if (choice == 'others') {
+    } else if (choice == 'chart') { // Chart View
+      if (!navContext.mounted) return;
+      await Navigator.push(
+        navContext,
+        MaterialPageRoute(builder: (_) => ChartViewScreen(patientId: p.id),
+        ),
+      );
+    } else if (choice == 'others') { // Other
       // TODO OTHER STUFF
     }
   }

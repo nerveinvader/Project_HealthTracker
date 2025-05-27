@@ -31,7 +31,7 @@ class ChartViewScreen extends StatefulWidget {
 }
 
 class _ChartViewScreenState extends State<ChartViewScreen> {
-  final ChartRange _selectedRange = ChartRange.days7;
+  ChartRange _selectedRange = ChartRange.days7;
   late Future<List<LabEntry>> _entriesFuture;
 
   @override
@@ -70,43 +70,103 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
+    final langLoc = AppLocalizations.of(context)!; // Applocalization Hassle!
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(langLoc.chartTitle),
+      ),
+      body: Column(
+        children: [
+          // Range selector
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ToggleButtons(
+              isSelected: ChartRange.values
+                .map((r) => r == _selectedRange)
+                .toList(),
+              onPressed: (index) {
+                setState(() {
+                  _selectedRange = ChartRange.values[index];
+                });
+                _loadLabEntries(); // Reload
+              },
+              children: [
+                Text(langLoc.chartLast7),
+                Text(langLoc.chartLast14),
+                Text(langLoc.chartLast30),
+                Text(langLoc.chartLast90),
+                ],
+              )
+            ),
+          Expanded(
+            child: FutureBuilder<List<LabEntry>>(
+              future: _entriesFuture,
+              builder:(context, snapshot) {
+                // Error Handling
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(langLoc.errorLoadingdata)),
+                    );
+                  });
+                  return Center(child: Text(langLoc.errorPlaceholder));
+                }
+                // Data Handling
+                final data = snapshot.data!;
+                if (data.isEmpty) {
+                  return Center(child: Text(langLoc.chartNoData));
+                }
+                // Build Chart
+                final spots = <FlSpot>[];
+                for (var e in data) {
+                  final x = e.date.millisecondsSinceEpoch.toDouble();
+                  final y = e.value.toDouble();
+                  spots.add(FlSpot(x, y));
+                }
 
-
-@override
-Widget build(BuildContext context) {
-  final langLoc = AppLocalizations.of(context)!; // Applocalization Hassle!
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(langLoc.chartTitle),
-    ),
-    body: Column(
-      children: [
-        // Range selector
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ToggleButtons(
-            isSelected: ChartRange.values
-              .map((r) => r == _selectedRange)
-              .toList(),
-            onPressed: (index) {
-              setState(() {
-                _selectedRange = ChartRange.values[index];
-              });
-              _loadLabEntries(); // Reload
-            },
-            children: [
-              Text(langLoc.chartLast7),
-              Text(langLoc.chartLast14),
-              Text(langLoc.chartLast30),
-              Text(langLoc.chartLast90),
-              ],
-            )
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: LineChart(
+                    LineChartData(
+                      gridData: FlGridData(show: true),
+                      titlesData: FlTitlesData(
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            getTitlesWidget: (value, meta) {
+                              final date = DateTime.fromMicrosecondsSinceEpoch(value.toInt());
+                              final label = DateFormat.Md('fa').format(date);
+                              return Text(
+                                  label, style: const TextStyle(fontSize: 10),
+                              );
+                            },
+                          ),
+                        ),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: true),
+                        ),
+                      ),
+                      lineBarsData: [
+                        LineChartBarData(
+                          spots: spots,
+                          isCurved: false,
+                          barWidth: 2,
+                          dotData: FlDotData(show: true),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
-        Expanded(child: ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
+
 }
