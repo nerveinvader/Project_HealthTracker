@@ -20,6 +20,11 @@ import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
 import 'package:intl/intl.dart';
 import '../../data/local/app_db.dart';
 
+// Chart Lab types
+const List<String> labTypes = [
+  'HbA1c', 'FBS', '2HPP', 'Cholesterol', 'HDL', 'LDL', 'TG', 'SBP', 'DBP'
+];
+// Chart Previous Days Range
 enum ChartRange { days7, days14, days30, days90 }
 
 class ChartViewScreen extends StatefulWidget {
@@ -32,6 +37,7 @@ class ChartViewScreen extends StatefulWidget {
 
 class _ChartViewScreenState extends State<ChartViewScreen> {
   ChartRange _selectedRange = ChartRange.days7;
+  String _selectedLabType = labTypes.first;
   late Future<List<LabEntry>> _entriesFuture;
 
   @override
@@ -40,17 +46,18 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
     _loadLabEntries();
   }
 
-  // Load lab entries in the selected date range, ascending by date
+  // Load lab entries for the selected date range and lab type
   void _loadLabEntries() {
     final now = DateTime.now();
     final from = now.subtract(Duration(days: _daysForRange(_selectedRange)));
 
     setState(() {
-      _entriesFuture = (db.select(db.labEntries) // DB query
-        ..where((tbl) => tbl.patientId.equals(widget.patientId))
-        ..where((tbl) => tbl.date.isBiggerOrEqualValue(from))
-        ..orderBy([(t) => OrderingTerm.asc(t.date)]))
-        .get();
+      final query = (db.select(db.labEntries) // DB query
+          ..where((tbl) => tbl.patientId.equals(widget.patientId)) // ID
+          ..where((tbl) => tbl.type.equals(_selectedLabType)) // Lab Type
+          ..where((tbl) => tbl.date.isBiggerOrEqualValue(from)) // Date Rnage
+          ..orderBy([(t) => OrderingTerm.asc(t.date)]));
+        _entriesFuture = query.get();
     });
   }
 
@@ -77,6 +84,26 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
       ),
       body: Column(
         children: [
+          // Lab Selector
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            child: DropdownButtonFormField(
+              value: _selectedLabType,
+              decoration: InputDecoration(
+                labelText: langLoc.labType,
+              ),
+              items: labTypes
+                .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                .toList(),
+              onChanged: (val) {
+                setState(() => _selectedLabType = val!);
+                _loadLabEntries(); // Reload
+              },
+            ),
+          ),
           // Range selector
           Padding(
             padding: const EdgeInsets.all(8.0),

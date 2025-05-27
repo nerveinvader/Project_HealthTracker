@@ -55,5 +55,15 @@
     "chartNoData": "No Data for Charts",
     "errorLoadingdata": "Error on Loading Data",
     "errorPlaceholder": "Error: Placeholder",
-    "other": "Other"
+    "PATIENT_UI": "PATIENT_UI",
+    "uiGreeting": "Greetings, ",
+    "uiWeeklyProgress": "Weekly Progress",
+    "uiLastBP": "Last Blood Pressure",
+    "uiLastFBS": "Last FBS",
+    "uiLastChol": "Last Cholesterol",
+    "uiLearnHTN": "Learn more on Hypertension",
+    "uiLearnDM": "Learn more on Diabetes Mellitus",
+    "uiLearnHLP": "Learn more on Hyperlipidemia",
+    "uiProfile": "Profile",
+    "uiAdd": "Add"
 }
