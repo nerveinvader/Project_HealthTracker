@@ -18,6 +18,7 @@
     "patientDeleted": "بیمار حذف شد",
     "confirmDeletePatient": "آیا مطمئن هستید که می خواهید این بیمار را حذف کنید؟",
     "fieldRequired": "این فیلد الزامی است",
+    "labTitle": "آزمایشات",
     "labDeleted": "آزمایش حذف شد",
     "noLabEntries": "آزمایشی پیدا نشد",
     "confirmDeleteLab": "آیا مطمئن هستید که می خواهید این آزمایش را حذف کنید؟",
@@ -46,5 +47,13 @@
     "q8hr": "هر 8 ساعت",
     "q6hr": "هر 6 ساعت",
     "q4hr": "هر 4 ساعت",
+    "chartTitle": "نمودار",
+    "chartLast7": "7 روز گذشته",
+    "chartLast14": "14 روز گذشته",
+    "chartLast30": "ماه گدشته",
+    "chartLast90": "3 ماه گذشته",
+    "chartNoData": "اطلاعاتی برای نمایش وجود ندارد",
+    "errorLoadingdata": "خطای بارگذاری اطلاعات",
+    "errorPlaceholder": "Error: Placeholder",
     "other": "دیگر موارد"
 }
