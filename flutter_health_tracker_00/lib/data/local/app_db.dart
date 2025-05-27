@@ -15,6 +15,9 @@ class Patients extends Table {
   DateTimeColumn get dateOfBirth => dateTime()(); // Patient Date of Birth
   RealColumn get height => real()(); // Patient Height
   RealColumn get weight => real()(); // Patient Weight
+
+  @override
+  Set<Column> get primaryKey => {id}; // Primary key
 }
 
 class LabEntries extends Table {
@@ -23,6 +26,9 @@ class LabEntries extends Table {
   DateTimeColumn get date => dateTime()(); // Lab Entry Date
   TextColumn get type => text()(); // Labe Entry Type
   RealColumn get value => real()(); // Lab Entry Value
+
+  @override
+  Set<Column> get primaryKey => {id}; // Primary key
 }
 
 class MedicationEntries extends Table {
@@ -33,6 +39,9 @@ class MedicationEntries extends Table {
   TextColumn get frequency => text().nullable()(); // frequency
   DateTimeColumn get start => dateTime().nullable()(); // optional start date
   DateTimeColumn get end => dateTime().nullable()(); // optional end date
+
+  @override
+  Set<Column> get primaryKey => {id}; // Primary key
 }
 
 

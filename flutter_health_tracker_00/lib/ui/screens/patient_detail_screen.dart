@@ -75,18 +75,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
     //final formattedDate = Jalali.fromDateTime(p.dateOfBirth); // Jalali format
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(p.name),
-            const SizedBox(height: 4),
-            Text(
-              p.location,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
-        ),
+        title: Text(AppLocalizations.of(context)!.viewLabs), /// CHANGE THIS TO (labsTitle)
       ),
       body: FutureBuilder<List<LabEntry>>(
         future: _labsFuture,

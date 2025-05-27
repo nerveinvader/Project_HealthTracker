@@ -27,15 +27,6 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
   Jalali? _selectedJalali;
   DateTime? _selectedDob;
 
-  String _normalizeNumber(String input) {
-  const persianNums = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
-  const englishNums = ['0','1','2','3','4','5','6','7','8','9'];
-  for (var i = 0; i < persianNums.length; i++) {
-    input = input.replaceAll(persianNums[i], englishNums[i]);
-  }
-  return input;
-}
-
   @override
   void initState() {
     super.initState();
@@ -60,6 +51,16 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
     _heightController.dispose();
     _weightController.dispose();
     super.dispose();
+  }
+
+  // Change/Normalize Persian numbers to English numbers
+  String _normalizeNumber(String input) {
+  const persianNums = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  const englishNums = ['0','1','2','3','4','5','6','7','8','9'];
+  for (var i = 0; i < persianNums.length; i++) {
+    input = input.replaceAll(persianNums[i], englishNums[i]);
+  }
+  return input;
   }
 
   // Persian Date of Birth Picker

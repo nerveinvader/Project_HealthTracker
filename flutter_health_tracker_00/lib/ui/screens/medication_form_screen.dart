@@ -51,6 +51,16 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
     super.dispose();
   }
 
+  // Change/Normalize Persian numbers to English numbers
+  String _normalizeNumber(String input) {
+  const persianNums = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  const englishNums = ['0','1','2','3','4','5','6','7','8','9'];
+  for (var i = 0; i < persianNums.length; i++) {
+    input = input.replaceAll(persianNums[i], englishNums[i]);
+  }
+  return input;
+  }
+
   Future<void> _pickDate({required bool isStart}) async {
     final initial = isStart
         ? Jalali.fromDateTime(_start) : (_end != null ? Jalali.fromDateTime(_end!)
@@ -83,7 +93,8 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
     // Parse dosage string to double if provided
     double? dosageValue;
     if (_dosageCtl.text.isNotEmpty) {
-        dosageValue = double.tryParse(_dosageCtl.text);
+        final txt = _normalizeNumber(_dosageCtl.text);
+        dosageValue = double.tryParse(txt);
         if (dosageValue == null) {
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(AppLocalizations.of(context)!.invalidDosage))
