@@ -48,6 +48,13 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Text("TEST - SKIP"),
               ),
+              // TEST: HOME SCREEN
+              const SizedBox(height: 16.0),
+              ElevatedButton(onPressed: () {
+                Navigator.pushReplacementNamed(context, '/patientHome');
+              },
+              child: Text("TEST - HOME"),
+              ),
             ],
           ),
         ),

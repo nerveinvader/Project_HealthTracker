@@ -55,8 +55,8 @@
     "chartNoData": "اطلاعاتی برای نمایش وجود ندارد",
     "errorLoadingdata": "خطای بارگذاری اطلاعات",
     "errorPlaceholder": "Error: Placeholder",
-    "PATIENT_UI": "PATIENT_UI",
-    "uiGreeting": "،سلام ",
+    "uiuiui": "PATIENT_UI",
+    "uiGreeting": "سلام، ",
     "uiWeeklyProgress": "پیشرفت هفتگی",
     "uiLastBP": "آخرین فشار خون",
     "uiLastFBS": "آخرین قند خون",
@@ -65,5 +65,6 @@
     "uiLearnDM": "بیشتر درباره دیابت بدانیم",
     "uiLearnHLP": "بیشتر درباره چربی خون بدانیم",
     "uiProfile": "پروفایل",
-    "uiAdd": "افزودن"
+    "uiAdd": "افزودن",
+    "other": "دیگر"
 }

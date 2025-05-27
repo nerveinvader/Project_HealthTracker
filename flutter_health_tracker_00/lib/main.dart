@@ -7,7 +7,7 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 
 import 'ui/screens/login_screen.dart';
 import 'ui/screens/otp_screen.dart';
-//import 'ui/screens/patients_screen.dart';
+import 'ui/screens/patient_home_screen.dart';
 
 void main() async {
   await dotenv.load(); // load the .env file
@@ -20,15 +20,40 @@ class HealthTracker extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // Theme Data
+    final primary = const Color(0xFF5157F3);
+    final secondary = const Color(0xFFEE74B5);
+    final bgLight = const Color(0xFFFBDBEC);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Health Tracker',
       theme: ThemeData(
-        primaryColor: const Color(0xFF2A9DF4),
-        scaffoldBackgroundColor: const Color(0xFFD0EFFF),
+        primaryColor: primary,
+        scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Vazir',
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: const Color(0xFFD8315B),
+          primary: primary,
+          secondary: secondary,
+          surface: bgLight,
+        ),
+        // Default Card Styles
+        cardTheme: CardTheme(
+          color: bgLight,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        // Default Text Styles
+        //textTheme: TextTheme(),
+        // Default Button Shape
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
         ),
       ),
       supportedLocales: AppLocalizations.supportedLocales,
@@ -47,6 +72,7 @@ class HealthTracker extends StatelessWidget {
         '/': (context) => const LoginScreen(),
         '/otp': (context) => const OtpScreen(phone: ''),
         '/patients': (context) => const PatientListScreen(),
+        '/patientHome': (context) => const PatientHomeScreen(patientId: '',),
       },
     );
   }
