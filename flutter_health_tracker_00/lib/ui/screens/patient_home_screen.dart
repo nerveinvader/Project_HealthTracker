@@ -7,6 +7,9 @@
 // Body > ProgressionCard, DiseaseCards, LearnCards
 // Bottombar > Add, Profile, Chart
 
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart' hide TextDirection;
@@ -104,105 +107,128 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
     final langLoc = AppLocalizations.of(context)!;
     final patientName = langLoc.patientName;
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Top Margin
-              const SizedBox(height: 128.0),
-              // Greetings
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: Text(
-                    langLoc.uiGreeting + patientName,
-                    style: Theme.of(context).textTheme.displaySmall!.copyWith(fontWeight: FontWeight.bold),
-                  ),
-              ),
-              const SizedBox(height: 32.0),
-              // Weekly Progress Card
-              WeeklyProgressCard(
-                rating: _progressPercent, // CHANGE THIS LATER FOR /10 RATING
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ChartViewScreen(patientId: widget.patientId), // CHANGE THIS LATER
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 64.0),
-              // DiseaseCards
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'آخرین وضعیت اندازه گیری های شما',
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16.0),
-                  // HTN Card
-                  SizedBox(
-                    child: DiseaseCard(
-                      title: langLoc.uiLastBP,
-                      value: _bloodPressure,
-                      onTap: () {},
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  // DM Card
-                  SizedBox(
-                    child: DiseaseCard(
-                      title: langLoc.uiLastFBS,
-                      value: _fbs,
-                      onTap: () {},
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  // HLP Card
-                  SizedBox(
-                    child: DiseaseCard(
-                      title: langLoc.uiLastChol,
-                      value: _cholesterol,
-                      onTap: () {},
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 64.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'آخرین مطالب در مورد بیماری خود را بخوانید',
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16.0),
-                  // Learn HTN
-                  LearnMoreCard(
-                    text: langLoc.uiLearnHTN,
-                    onTap: () {},
-                  ),
-                  const SizedBox(height: 16.0),
-                  // Learn DM
-                  LearnMoreCard(
-                    text: langLoc.uiLearnDM,
-                    onTap: () {},
-                  ),
-                  const SizedBox(height: 16.0),
-                  // Learn HLP
-                  LearnMoreCard(
-                    text: langLoc.uiLearnHLP,
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ],
+      body: Stack(
+        children: [
+          // Background
+          Positioned.fill(
+            child: CustomPaint(painter: _GradientBackground(context),),
           ),
-        ),
+          // Logo in Background
+          Positioned.fill(
+            child: IgnorePointer( // To ignore tap
+              child: Center(child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Opacity(
+                  opacity: 0.1,
+                  child: Image.asset(
+                    '', width: 200, height: 200, fit: BoxFit.contain,
+                  ),
+                ),
+              ),),
+            ),
+          ),
+          // Safe Area for Interactions
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Top Margin
+                  const SizedBox(height: 128.0),
+                  // Greetings
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(
+                        langLoc.uiGreeting + patientName,
+                        style: Theme.of(context).textTheme.displaySmall!.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                  ),
+                  const SizedBox(height: 32.0),
+                  // Weekly Progress Card
+                  WeeklyProgressCard(
+                    rating: _progressPercent, // CHANGE THIS LATER FOR /10 RATING
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ChartViewScreen(patientId: widget.patientId), // CHANGE THIS LATER
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 64.0),
+                  // DiseaseCards
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'آخرین وضعیت اندازه گیری های شما',
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 16.0),
+                      // HTN Card
+                      SizedBox(
+                        child: DiseaseCard(
+                          title: langLoc.uiLastBP,
+                          value: _bloodPressure,
+                          onTap: () {},
+                        ),
+                      ),
+                      const SizedBox(height: 8.0),
+                      // DM Card
+                      SizedBox(
+                        child: DiseaseCard(
+                          title: langLoc.uiLastFBS,
+                          value: _fbs,
+                          onTap: () {},
+                        ),
+                      ),
+                      const SizedBox(height: 8.0),
+                      // HLP Card
+                      SizedBox(
+                        child: DiseaseCard(
+                          title: langLoc.uiLastChol,
+                          value: _cholesterol,
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 64.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'آخرین مطالب در مورد بیماری خود را بخوانید',
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 16.0),
+                      // Learn HTN
+                      LearnMoreCard(
+                        text: langLoc.uiLearnHTN,
+                        onTap: () {},
+                      ),
+                      const SizedBox(height: 16.0),
+                      // Learn DM
+                      LearnMoreCard(
+                        text: langLoc.uiLearnDM,
+                        onTap: () {},
+                      ),
+                      const SizedBox(height: 16.0),
+                      // Learn HLP
+                      LearnMoreCard(
+                        text: langLoc.uiLearnHLP,
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
@@ -250,6 +276,32 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
 }
 
 // Private Classes
+
+// Gradient Coloring in the Background
+class _GradientBackground extends CustomPainter {
+  final BuildContext context;
+
+  _GradientBackground(this.context);
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final gradient = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Colors.white,
+        Colors.white,
+        Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), // Replace with your theme color
+      ],
+    );
+    final paint = Paint()..shader = gradient.createShader(rect);
+    canvas.drawRect(rect, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
 
 // Disease-specific Card showing for HTN, DM, HLP
 // Has ability to Navigate to another screen
