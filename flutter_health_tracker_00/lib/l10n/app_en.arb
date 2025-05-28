@@ -57,7 +57,7 @@
     "errorPlaceholder": "Error: Placeholder",
     "uiuiui": "PATIENT_UI",
     "uiGreeting": "Greetings, ",
-    "uiWeeklyProgress": "Weekly Progress",
+    "uiWeeklyProgress": "Weekly Rating of Your Health",
     "uiLastBP": "Last Blood Pressure",
     "uiLastFBS": "Last FBS",
     "uiLastChol": "Last Cholesterol",

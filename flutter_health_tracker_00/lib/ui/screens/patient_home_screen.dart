@@ -117,7 +117,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                 textDirection: TextDirection.rtl,
                 child: Text(
                     langLoc.uiGreeting + patientName,
-                    style: Theme.of(context).textTheme.displaySmall,
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(fontWeight: FontWeight.bold),
                   ),
               ),
               const SizedBox(height: 32.0),
@@ -133,17 +133,22 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                   );
                 },
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 64.0),
               // DiseaseCards
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    'آخرین وضعیت اندازه گیری های شما',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16.0),
                   // HTN Card
                   SizedBox(
                     child: DiseaseCard(
                       title: langLoc.uiLastBP,
                       value: _bloodPressure,
-                      diseaseIcon: Icons.monitor_heart,
                       onTap: () {},
                     ),
                   ),
@@ -153,7 +158,6 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                     child: DiseaseCard(
                       title: langLoc.uiLastFBS,
                       value: _fbs,
-                      diseaseIcon: Icons.cookie,
                       onTap: () {},
                     ),
                   ),
@@ -163,29 +167,38 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                     child: DiseaseCard(
                       title: langLoc.uiLastChol,
                       value: _cholesterol,
-                      diseaseIcon: Icons.fastfood,
                       onTap: () {},
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16.0),
-              // Learn HTN
-              LearnMoreCard(
-                text: langLoc.uiLearnHTN,
-                onTap: () {},
-              ),
-              const SizedBox(height: 16.0),
-              // Learn DM
-              LearnMoreCard(
-                text: langLoc.uiLearnDM,
-                onTap: () {},
-              ),
-              const SizedBox(height: 16.0),
-              // Learn HLP
-              LearnMoreCard(
-                text: langLoc.uiLearnHLP,
-                onTap: () {},
+              const SizedBox(height: 64.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'آخرین مطالب در مورد بیماری خود را بخوانید',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16.0),
+                  // Learn HTN
+                  LearnMoreCard(
+                    text: langLoc.uiLearnHTN,
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 16.0),
+                  // Learn DM
+                  LearnMoreCard(
+                    text: langLoc.uiLearnDM,
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 16.0),
+                  // Learn HLP
+                  LearnMoreCard(
+                    text: langLoc.uiLearnHLP,
+                    onTap: () {},
+                  ),
+                ],
               ),
             ],
           ),
@@ -207,10 +220,16 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
               },
             ),
             // Add
-            IconButton(
-              icon: Icon(Icons.add),
-              tooltip: langLoc.uiAdd,
-              onPressed: _showAddOptions,
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
+              ),
+              child: IconButton(
+                icon: Icon(Icons.add),
+                tooltip: langLoc.uiAdd,
+                onPressed: _showAddOptions,
+              ),
             ),
             // Profile
             IconButton(
@@ -237,9 +256,8 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
 class DiseaseCard extends StatelessWidget {
   final String title;
   final String value;
-  final IconData diseaseIcon;
   final VoidCallback onTap;
-  const DiseaseCard({super.key, required this.title, required this.value, required this.diseaseIcon, required this.onTap});
+  const DiseaseCard({super.key, required this.title, required this.value, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -247,36 +265,42 @@ class DiseaseCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(8.0),
       child: Container(
-        padding: const EdgeInsets.all(12.0),
-        margin: const EdgeInsets.symmetric(horizontal: 32.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8.0),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
-              blurRadius: 4.0,
+              blurRadius: 16.0,
               offset: Offset(0, 2.0),
             ),
           ],
         ),
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(diseaseIcon, size: 32, color: Colors.white60),
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white),
+                  style: Theme.of(context).textTheme.titleMedium!,
                 ),
-                const SizedBox(height: 4.0),
+                const SizedBox(height: 16.0),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white),
+                  style: Theme.of(context).textTheme.titleLarge!,
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  'تاریخ انجام: 12/مرداد/1403',
+                  style: Theme.of(context).textTheme.bodySmall!,
                 ),
               ],
             ),
+            const Icon(Icons.arrow_forward_ios, size: 16),
           ],
         ),
       ),
@@ -301,7 +325,14 @@ class LearnMoreCard extends StatelessWidget {
         height: 100.0,
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
+          color: Theme.of(context).colorScheme.surface,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 16.0,
+              offset: Offset(0, 2.0),
+            )
+          ],
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -336,8 +367,15 @@ class WeeklyProgressCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black38,
+              blurRadius: 32.0,
+              offset: Offset(0, 2.0),
+            ),
+          ],
         ),
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -366,7 +404,7 @@ class WeeklyProgressCard extends StatelessWidget {
                   CircularProgressIndicator(
                     value: rating / 100, // 0.0 - 1.0
                     strokeWidth: 6.0,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                     backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                   ),
                   Text('$rating10'),

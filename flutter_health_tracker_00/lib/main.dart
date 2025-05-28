@@ -22,20 +22,21 @@ class HealthTracker extends StatelessWidget {
   Widget build(BuildContext context) {
     // Theme Data
     final primary = const Color(0xFF5157F3);
-    final secondary = const Color(0xFFEE74B5);
-    final bgLight = const Color(0xFFFBDBEC);
+    final secondary = const Color(0xFFEE74B1);
+    final bgLight = const Color(0xFFFFD4EB);
+    final surfaceColor = const Color(0xFFFFFFFF);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Health Tracker',
       theme: ThemeData(
         primaryColor: primary,
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: surfaceColor,
         fontFamily: 'Vazir',
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: primary,
           secondary: secondary,
-          surface: bgLight,
+          surface: surfaceColor,
         ),
         // Default Card Styles
         cardTheme: CardTheme(
