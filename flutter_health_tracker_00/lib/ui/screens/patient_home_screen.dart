@@ -7,19 +7,19 @@
 // Body > ProgressionCard, DiseaseCards, LearnCards
 // Bottombar > Add, Profile, Chart
 
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/intl.dart' hide TextDirection;
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-import '../../data/local/app_db.dart';
+//import 'package:intl/intl.dart' hide TextDirection;
+//import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+//import '../../data/local/app_db.dart';
 
 import 'chart_view_screen.dart';
 import 'patient_form_screen.dart';
 import 'lab_entry_form_screen.dart';
 import 'medication_form_screen.dart';
+import 'disease_dashboard_screen.dart'; // Disease Specific Dashboard
 
 class PatientHomeScreen extends StatefulWidget {
   final String patientId;
@@ -111,7 +111,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
         children: [
           // Background
           Positioned.fill(
-            child: CustomPaint(painter: _GradientBackground(context),),
+            child: CustomPaint(painter: GradientBackground(context),),
           ),
           // Logo in Background
           Positioned.fill(
@@ -158,7 +158,9 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                     },
                   ),
                   const SizedBox(height: 64.0),
+                  ///////////////
                   // DiseaseCards
+                  ///////////////
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,30 +170,69 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                         style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16.0),
+                      ///////////
                       // HTN Card
+                      ///////////
                       SizedBox(
                         child: DiseaseCard(
                           title: langLoc.uiLastBP,
                           value: _bloodPressure,
-                          onTap: () {},
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => DiseaseDashboardScreen(
+                                  type: DiseaseType.hypertension, patientId: widget.patientId),
+                              ),
+                            );
+                            setState(() {
+                              // reload if want
+                            });
+                          },
                         ),
                       ),
                       const SizedBox(height: 8.0),
+                      ///////////
                       // DM Card
+                      ///////////
                       SizedBox(
                         child: DiseaseCard(
                           title: langLoc.uiLastFBS,
                           value: _fbs,
-                          onTap: () {},
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => DiseaseDashboardScreen(
+                                  type: DiseaseType.diabetes, patientId: widget.patientId),
+                              ),
+                            );
+                            setState(() {
+                              // reload if want
+                            });
+                          },
                         ),
                       ),
                       const SizedBox(height: 8.0),
+                      ///////////
                       // HLP Card
+                      ///////////
                       SizedBox(
                         child: DiseaseCard(
                           title: langLoc.uiLastChol,
                           value: _cholesterol,
-                          onTap: () {},
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => DiseaseDashboardScreen(
+                                  type: DiseaseType.hyperlipidemia, patientId: widget.patientId),
+                              ),
+                            );
+                            setState(() {
+                              // reload if want
+                            });
+                          },
                         ),
                       ),
                     ],
@@ -278,10 +319,10 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
 // Private Classes
 
 // Gradient Coloring in the Background
-class _GradientBackground extends CustomPainter {
+class GradientBackground extends CustomPainter {
   final BuildContext context;
 
-  _GradientBackground(this.context);
+  GradientBackground(this.context);
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Rect.fromLTWH(0, 0, size.width, size.height);
