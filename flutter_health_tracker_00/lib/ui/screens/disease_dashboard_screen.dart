@@ -13,8 +13,7 @@ import 'package:flutter_health_tracker_00/ui/widgets/cards.dart';
 import 'package:intl/intl.dart';
 import '../../data/local/app_db.dart';
 
-// Public Class
-import '../public_classes.dart';
+import '../screens/theme/theme_related.dart';
 
 /// Enum to select disease type
 enum DiseaseType { hypertension, diabetes, hyperlipidemia }
@@ -226,57 +225,4 @@ class DiseaseDashboardScreen extends StatelessWidget {
   }
 }
 
-/// A card showing a lab measurement with an arrow
-class MeasurementCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final String date;
-  final VoidCallback onTap;
-
-  const MeasurementCard({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.date,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 6,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: Theme.of(context).textTheme.bodyMedium),
-                const SizedBox(height: 4),
-                Text(value, style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(height: 4),
-                Text(date, style: Theme.of(context).textTheme.bodySmall),
-              ],
-            ),
-            const Icon(Icons.arrow_forward_ios, size: 20),
-          ],
-        ),
-      ),
-    );
-  }
-}
+/* Private Class */

@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../data/local/app_db.dart';
 
+import '../public_classes.dart';
+
 class PatientFormScreen extends StatefulWidget {
   final Patient? patient;
   const PatientFormScreen({super.key, this.patient});
@@ -53,16 +55,6 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
     super.dispose();
   }
 
-  // Change/Normalize Persian numbers to English numbers
-  String _normalizeNumber(String input) {
-  const persianNums = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
-  const englishNums = ['0','1','2','3','4','5','6','7','8','9'];
-  for (var i = 0; i < persianNums.length; i++) {
-    input = input.replaceAll(persianNums[i], englishNums[i]);
-  }
-  return input;
-  }
-
   // Persian Date of Birth Picker
   Future<void> _pickDob() async {
     Jalali? picked = await showPersianDatePicker(
@@ -85,8 +77,8 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
   Future<void> _savePatient() async {
     if (!_formkey.currentState!.validate() || _selectedDob == null) return;
     final navContext = context;
-    final heightText = _normalizeNumber(_heightController.text);
-    final weightText = _normalizeNumber(_weightController.text);
+    final heightText = normalizeNumber(_heightController.text);
+    final weightText = normalizeNumber(_weightController.text);
     final comp = PatientsCompanion(
       id:widget.patient?.id != null ? Value(widget.patient!.id) : Value.absent(),
       name: Value(_nameController.text),
