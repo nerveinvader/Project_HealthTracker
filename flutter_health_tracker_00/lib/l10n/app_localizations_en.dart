@@ -153,6 +153,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chartTitle => 'Charts';
 
   @override
+  String get chartHour => 'Hour';
+
+  @override
+  String get chartDay => 'Day';
+
+  @override
+  String get chartWeek => 'Week';
+
+  @override
+  String get chartMonth => 'Month';
+
+  @override
+  String get chartYear => 'Year';
+
+  @override
   String get chartLast7 => 'Last 7 Days';
 
   @override

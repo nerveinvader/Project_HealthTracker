@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-
+import '../../l10n/app_localizations.dart';
 import 'ui/screens/login_screen.dart';
 import 'ui/screens/otp_screen.dart';
 import 'ui/screens/patient_home_screen.dart';
@@ -39,7 +39,7 @@ class HealthTracker extends StatelessWidget {
           surface: surfaceColor,
         ),
         // Default Card Styles
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           color: bgLight,
           elevation: 4,
           shape: RoundedRectangleBorder(

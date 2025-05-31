@@ -383,6 +383,36 @@ abstract class AppLocalizations {
   /// **'Charts'**
   String get chartTitle;
 
+  /// No description provided for @chartHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Hour'**
+  String get chartHour;
+
+  /// No description provided for @chartDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get chartDay;
+
+  /// No description provided for @chartWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get chartWeek;
+
+  /// No description provided for @chartMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get chartMonth;
+
+  /// No description provided for @chartYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get chartYear;
+
   /// No description provided for @chartLast7.
   ///
   /// In en, this message translates to:

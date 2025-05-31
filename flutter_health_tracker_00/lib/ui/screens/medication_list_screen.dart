@@ -4,8 +4,7 @@
 // to add or edit medications
 
 import 'package:flutter/material.dart';
-import 'package:drift/drift.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
 import 'medication_form_screen.dart';
 import '../../data/local/app_db.dart';

@@ -3,8 +3,7 @@
 // The first page to register on the DB.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../data/remote/sms_service.dart';
 import 'otp_screen.dart';
 

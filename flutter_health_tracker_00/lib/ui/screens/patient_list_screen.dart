@@ -4,7 +4,7 @@
 // to add or edit patients
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import 'package:flutter_health_tracker_00/ui/screens/chart_view_screen.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_detail_screen.dart';
 import 'medication_list_screen.dart';

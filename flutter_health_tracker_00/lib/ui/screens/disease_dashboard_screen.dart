@@ -8,7 +8,7 @@ import 'dart:ui';
 
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import 'package:flutter_health_tracker_00/ui/widgets/cards.dart';
 import 'package:intl/intl.dart';
 import '../../data/local/app_db.dart';

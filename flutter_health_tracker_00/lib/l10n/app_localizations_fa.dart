@@ -153,6 +153,21 @@ class AppLocalizationsFa extends AppLocalizations {
   String get chartTitle => 'نمودار';
 
   @override
+  String get chartHour => 'ساعت';
+
+  @override
+  String get chartDay => 'روز';
+
+  @override
+  String get chartWeek => 'هفته';
+
+  @override
+  String get chartMonth => 'ماه';
+
+  @override
+  String get chartYear => 'سال';
+
+  @override
   String get chartLast7 => '7 روز گذشته';
 
   @override
