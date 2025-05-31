@@ -79,119 +79,199 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
   Widget build(BuildContext context) {
     final langLoc = AppLocalizations.of(context)!; // Applocalization Hassle!
     return Scaffold(
-      appBar: AppBar(
-        title: Text(langLoc.chartTitle),
-      ),
-      body: Column(
-        children: [
-          // Lab Selector
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
-            ),
-            child: DropdownButtonFormField(
-              value: _selectedLabType,
-              decoration: InputDecoration(
-                labelText: langLoc.labType,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Headroom
+              // Anything else?
+              // Top Margin
+              const SizedBox(height: 100.0),
+              Text(
+                AppLocalizations.of(context)!.chartTitle,
+                style: Theme.of(context).textTheme.displaySmall,
               ),
-              items: labTypes
-                .map((type) => DropdownMenuItem(value: type, child: Text(type)))
-                .toList(),
-              onChanged: (val) {
-                setState(() => _selectedLabType = val!);
-                _loadLabEntries(); // Reload
-              },
-            ),
-          ),
-          // Range selector
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ToggleButtons(
-              isSelected: ChartRange.values
-                .map((r) => r == _selectedRange)
-                .toList(),
-              onPressed: (index) {
-                setState(() {
-                  _selectedRange = ChartRange.values[index];
-                });
-                _loadLabEntries(); // Reload
-              },
-              children: [
-                Text(langLoc.chartLast7),
-                Text(langLoc.chartLast14),
-                Text(langLoc.chartLast30),
-                Text(langLoc.chartLast90),
-                ],
-              )
-            ),
-          Expanded(
-            child: FutureBuilder<List<LabEntry>>(
-              future: _entriesFuture,
-              builder:(context, snapshot) {
-                // Error Handling
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(langLoc.errorLoadingdata)),
-                    );
-                  });
-                  return Center(child: Text(langLoc.errorPlaceholder));
-                }
-                // Data Handling
-                final data = snapshot.data!;
-                if (data.isEmpty) {
-                  return Center(child: Text(langLoc.chartNoData));
-                }
-                // Build Chart
-                final spots = <FlSpot>[];
-                for (var e in data) {
-                  final x = e.date.millisecondsSinceEpoch.toDouble();
-                  final y = e.value.toDouble();
-                  spots.add(FlSpot(x, y));
-                }
-
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: LineChart(
-                    LineChartData(
-                      gridData: FlGridData(show: true),
-                      titlesData: FlTitlesData(
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (value, meta) {
-                              final date = DateTime.fromMicrosecondsSinceEpoch(value.toInt());
-                              final label = DateFormat.Md('fa').format(date);
-                              return Text(
-                                  label, style: const TextStyle(fontSize: 10),
-                              );
-                            },
+              // Lab Selector
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 48.0,
+                  vertical: 8.0,
+                ),
+                child: DropdownButtonFormField(
+                  value: _selectedLabType,
+                  decoration: InputDecoration(
+                    labelText: langLoc.labType,
+                  ),
+                  items: labTypes
+                    .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                    .toList(),
+                  onChanged: (val) {
+                    setState(() => _selectedLabType = val!);
+                    _loadLabEntries(); // Reload
+                  },
+                ),
+              ),
+              // Range selector
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: ToggleButtons(
+                  renderBorder: false,
+                  isSelected: ChartRange.values
+                    .map((r) => r == _selectedRange)
+                    .toList(),
+                  onPressed: (index) {
+                    setState(() {
+                      _selectedRange = ChartRange.values[index];
+                    });
+                    _loadLabEntries(); // Reload
+                  },
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(langLoc.chartLast7),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(langLoc.chartLast14),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(langLoc.chartLast30),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(langLoc.chartLast90),
+                    ),
+                  ],
+                )
+              ),
+              // Chart View Panel
+              SizedBox(
+                height: 256,
+                child: FutureBuilder<List<LabEntry>>(
+                  future: _entriesFuture,
+                  builder:(context, snapshot) {
+                    // Error Handling
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(langLoc.errorLoadingdata)),
+                        );
+                      });
+                      return Center(child: Text(langLoc.errorPlaceholder));
+                    }
+                    // Data Handling
+                    final data = snapshot.data!;
+                    if (data.isEmpty) {
+                      return Center(child: Text(langLoc.chartNoData));
+                    }
+                    // Convert spots to FlSpot
+                    final spots = <FlSpot>[];
+                    for (var e in data) {
+                      final x = e.date.millisecondsSinceEpoch.toDouble();
+                      final y = e.value.toDouble();
+                      spots.add(FlSpot(x, y));
+                    }
+                    // Padding (easier?)
+                    final minX = spots.first.x;
+                    final maxX = spots.last.x;
+                    final values = spots.map((s) => s.y).toList();
+                    final minY = values.reduce((a, b) => a < b ? a : b) * 0.9;
+                    final maxY = values.reduce((a, b) => a > b ? a : b) * 1.1;
+                    return Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: LineChart(
+                        LineChartData(
+                          minX: minX,
+                          minY: minY,
+                          maxX: maxX,
+                          maxY: maxY,
+                          // Draw a Light Grid
+                          gridData: FlGridData(
+                            show: true,
+                            horizontalInterval: (maxY - minY),
+                            getDrawingHorizontalLine: (y) => FlLine(
+                              color: Colors.grey.shade200,
+                              strokeWidth: 1,
+                            ),
                           ),
-                        ),
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(showTitles: true),
+                          // Titles
+                          titlesData: FlTitlesData(
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 22,
+                                interval: (maxX - minX) / 4,
+                                getTitlesWidget: (value, meta) {
+                                  final date = DateTime.fromMicrosecondsSinceEpoch(value.toInt());
+                                  // Show week dat in Persian format
+                                  final label = DateFormat.Md('fa').format(date);
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 6),
+                                    child: Text(label, style: const TextStyle(fontSize: 10)),
+                                  );
+                                },
+                              ),
+                            ),
+                            leftTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                interval: (maxY - minY),
+                                reservedSize: 22,
+                                getTitlesWidget: (value, meta) {
+                                  return Text(
+                                    value.toStringAsFixed(1), //
+                                    style: const TextStyle(fontSize: 10),
+                                  );
+                                },
+                              ),
+                            ),
+                            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          ),
+                          // Border lines on bottom and left only
+                          borderData: FlBorderData(
+                            show: true,
+                            border: Border(
+                              bottom: BorderSide(color: Colors.grey.shade400, width: 1),
+                              left: BorderSide(color: Colors.grey.shade400, width: 1),
+                              right: BorderSide(color: Colors.transparent),
+                              top: BorderSide(color: Colors.transparent)
+                            ),
+                          ),
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: spots,
+                              isCurved: false,
+                              color: Theme.of(context).colorScheme.primary,
+                              barWidth: 2,
+                              dotData: FlDotData(
+                                show: true,
+                                getDotPainter: (spot, percent, barData, index) {
+                                  return FlDotCirclePainter(
+                                    radius: 4, // dotSize
+                                    color: Theme.of(context).colorScheme.primary, // dotColor
+                                    strokeWidth: 0,
+                                  );
+                                },
+                              ),
+                              belowBarData: BarAreaData(show: false),
+                            ),
+                          ],
                         ),
                       ),
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: spots,
-                          isCurved: false,
-                          barWidth: 2,
-                          dotData: FlDotData(show: true),
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 32,) // Placeholder
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

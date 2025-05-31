@@ -21,7 +21,7 @@ import 'lab_entry_form_screen.dart';
 import 'medication_form_screen.dart';
 import 'disease_dashboard_screen.dart'; // Disease Specific Dashboard
 
-import '../screens/theme/theme_related.dart';
+import '../theme/theme_related.dart';
 import '../widgets/cards.dart';
 
 class PatientHomeScreen extends StatefulWidget {

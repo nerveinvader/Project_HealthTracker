@@ -13,7 +13,7 @@ import 'package:flutter_health_tracker_00/ui/widgets/cards.dart';
 import 'package:intl/intl.dart';
 import '../../data/local/app_db.dart';
 
-import '../screens/theme/theme_related.dart';
+import '../theme/theme_related.dart';
 
 /// Enum to select disease type
 enum DiseaseType { hypertension, diabetes, hyperlipidemia }
@@ -101,15 +101,15 @@ class DiseaseDashboardScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Placeholder button
-                      IconButton(
-                        icon: const Icon(Icons.more_horiz),
-                        onPressed: () {},
-                      ),
                       // Back button - To Home Page
                       IconButton(
                         icon: const Icon(Icons.arrow_back_ios),
                         onPressed: () => Navigator.pop(context),
+                      ),
+                      // Placeholder button
+                      IconButton(
+                        icon: const Icon(Icons.more_horiz),
+                        onPressed: () {},
                       ),
                     ],
                   ),
