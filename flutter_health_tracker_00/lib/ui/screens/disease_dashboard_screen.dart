@@ -9,9 +9,12 @@ import 'dart:ui';
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_health_tracker_00/ui/widgets/cards.dart';
 import 'package:intl/intl.dart';
 import '../../data/local/app_db.dart';
-import 'patient_home_screen.dart'; // for LearnMoreCard reuse
+
+// Public Class
+import '../public_classes.dart';
 
 /// Enum to select disease type
 enum DiseaseType { hypertension, diabetes, hyperlipidemia }
