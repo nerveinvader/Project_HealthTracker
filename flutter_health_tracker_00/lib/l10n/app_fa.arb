@@ -74,5 +74,14 @@
     "uiHTN": "فشار خون",
     "uiDM": "دیابت",
     "uiHLP": "چربی خون",
+    "setProfile": "تنظیمات پروفایل",
+    "setEditProfile": "ویرایش پروفایل",
+    "setRemindSound": "یادآور و اعلان",
+    "setReminder": "اعلان/یادآور",
+    "setNotifSound": "صدا اعلان/یادآور",
+    "setLangSync": "زبان و همگام سازی",
+    "setAppLang": "زبان برنامه",
+    "setSync": "همگام سازی",
+    "setLogout": "خروج از پروفایل",
     "other": "دیگر"
 }

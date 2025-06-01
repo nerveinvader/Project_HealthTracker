@@ -10,18 +10,16 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
-//import 'package:intl/intl.dart' hide TextDirection;
-//import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-//import '../../data/local/app_db.dart';
 
 import 'chart_view_screen.dart'; // Chart View Dashboard
 import 'patient_form_screen.dart';
-import 'lab_entry_form_screen.dart';
-import 'medication_form_screen.dart';
+import 'lab_entry_form_screen.dart'; // Lab entry
+import 'medication_form_screen.dart'; // Medication Entry
 import 'disease_dashboard_screen.dart'; // Disease Specific Dashboard
+import 'setting_screen.dart'; // Settings
 
-import '../theme/theme_related.dart';
-import '../widgets/cards.dart';
+import '../theme/theme_related.dart'; // Theme
+import '../widgets/cards.dart'; // Reusable Cards
 
 class PatientHomeScreen extends StatefulWidget {
   final String patientId;
@@ -327,12 +325,12 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
             ),
             // Profile
             IconButton(
-              icon: Icon(Icons.person),
+              icon: Icon(Icons.settings),
               tooltip: langLoc.uiProfile,
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const PatientFormScreen()),
+                  MaterialPageRoute(builder: (_) => const SettingScreen()),
                 );
               },
             ),

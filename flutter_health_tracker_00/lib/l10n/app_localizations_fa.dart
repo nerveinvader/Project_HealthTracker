@@ -231,5 +231,32 @@ class AppLocalizationsFa extends AppLocalizations {
   String get uiHLP => 'چربی خون';
 
   @override
+  String get setProfile => 'تنظیمات پروفایل';
+
+  @override
+  String get setEditProfile => 'ویرایش پروفایل';
+
+  @override
+  String get setRemindSound => 'یادآور و اعلان';
+
+  @override
+  String get setReminder => 'اعلان/یادآور';
+
+  @override
+  String get setNotifSound => 'صدا اعلان/یادآور';
+
+  @override
+  String get setLangSync => 'زبان و همگام سازی';
+
+  @override
+  String get setAppLang => 'زبان برنامه';
+
+  @override
+  String get setSync => 'همگام سازی';
+
+  @override
+  String get setLogout => 'خروج از پروفایل';
+
+  @override
   String get other => 'دیگر';
 }

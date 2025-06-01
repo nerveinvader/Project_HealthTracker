@@ -11,7 +11,6 @@
 // Sync (online or offline)
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import '../../l10n/app_localizations.dart';
 
 import 'login_screen.dart';
@@ -47,10 +46,14 @@ class _SettingScreenState extends State<SettingScreen> {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                Text(
+                  langLoc.setProfile,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
                 // Profile
                 ListTile(
                   leading: const Icon(Icons.edit),
-                  title: Text('Edit Profile'),
+                  title: Text(langLoc.setEditProfile),
                   onTap:  () {
                     Navigator.push(
                       context,
@@ -60,12 +63,12 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 // Reminder and Sounds
                 Text(
-                  'Reminder and Sound',
+                  langLoc.setRemindSound,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
                 SwitchListTile(
-                  title: Text('Enable Reminder'),
+                  title: Text(langLoc.setReminder),
                   value: _reminderEnabled,
                   onChanged: (val) {
                     setState(() {
@@ -75,7 +78,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   }
                 ),
                 SwitchListTile(
-                  title: Text('Enable Sound'),
+                  title: Text(langLoc.setNotifSound),
                   value: _soundEnabled,
                   onChanged: (val) {
                     setState(() {
@@ -86,18 +89,18 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 const Divider(),
                 Text(
-                  'Language and Sync',
+                  langLoc.setLangSync,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
                 ListTile(
                   leading: const Icon(Icons.language),
-                  title: Text('App Language'),
+                  title: Text(langLoc.setAppLang),
                   trailing: DropdownButton<String>(
                     value: _appLanguage,
                     items: [
                       DropdownMenuItem(value: 'fa', child: Text('Persian')),
-                      DropdownMenuItem(value: 'en', child: Text('Persian'))
+                      DropdownMenuItem(value: 'en', child: Text('English'))
                     ],
                     onChanged: (val) {
                       if (val == null) return;
@@ -109,7 +112,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                 ),
                 SwitchListTile(
-                  title: Text('Enable Online Sync'),
+                  title: Text(langLoc.setSync),
                   value: _syncEnabled,
                   onChanged: (val) {
                     setState(() {
@@ -122,7 +125,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 // Logout
                 ListTile(
                   leading: const Icon(Icons.logout),
-                  title: Text('Logout'),
+                  title: Text(langLoc.setLogout),
                   onTap:  () {
                     Navigator.push(
                       context,

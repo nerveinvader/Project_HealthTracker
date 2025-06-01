@@ -539,6 +539,60 @@ abstract class AppLocalizations {
   /// **'Hyperlipidemia'**
   String get uiHLP;
 
+  /// No description provided for @setProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Setting'**
+  String get setProfile;
+
+  /// No description provided for @setEditProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get setEditProfile;
+
+  /// No description provided for @setRemindSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder & Sound'**
+  String get setRemindSound;
+
+  /// No description provided for @setReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Reminders'**
+  String get setReminder;
+
+  /// No description provided for @setNotifSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Sound'**
+  String get setNotifSound;
+
+  /// No description provided for @setLangSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Language & Sync'**
+  String get setLangSync;
+
+  /// No description provided for @setAppLang.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get setAppLang;
+
+  /// No description provided for @setSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get setSync;
+
+  /// No description provided for @setLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get setLogout;
+
   /// No description provided for @other.
   ///
   /// In en, this message translates to:

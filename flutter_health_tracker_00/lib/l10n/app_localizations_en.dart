@@ -231,5 +231,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get uiHLP => 'Hyperlipidemia';
 
   @override
+  String get setProfile => 'Profile Setting';
+
+  @override
+  String get setEditProfile => 'Edit Profile';
+
+  @override
+  String get setRemindSound => 'Reminder & Sound';
+
+  @override
+  String get setReminder => 'Enable Reminders';
+
+  @override
+  String get setNotifSound => 'Enable Sound';
+
+  @override
+  String get setLangSync => 'Language & Sync';
+
+  @override
+  String get setAppLang => 'Language';
+
+  @override
+  String get setSync => 'Sync';
+
+  @override
+  String get setLogout => 'Logout';
+
+  @override
   String get other => 'Other';
 }

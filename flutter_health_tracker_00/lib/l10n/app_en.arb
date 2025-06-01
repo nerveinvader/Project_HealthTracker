@@ -74,5 +74,14 @@
     "uiHTN": "Hypertention",
     "uiDM": "Diabetes Mellitus",
     "uiHLP": "Hyperlipidemia",
+    "setProfile": "Profile Setting",
+    "setEditProfile": "Edit Profile",
+    "setRemindSound": "Reminder & Sound",
+    "setReminder": "Enable Reminders",
+    "setNotifSound": "Enable Sound",
+    "setLangSync": "Language & Sync",
+    "setAppLang": "Language",
+    "setSync": "Sync",
+    "setLogout": "Logout",
     "other": "Other"
 }
