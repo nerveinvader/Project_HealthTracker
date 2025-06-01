@@ -12,13 +12,16 @@
 // Error: No entries, db failure, async gaps, data conversion and localization (date)
 */
 
+import 'dart:math' as math;
+
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../l10n/app_localizations.dart';
-import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
-import 'package:intl/intl.dart';
 import '../../data/local/app_db.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart'; //?
 
 // Chart Lab types
 const List<String> labTypes = [
@@ -37,7 +40,7 @@ class ChartViewScreen extends StatefulWidget {
 
 class _ChartViewScreenState extends State<ChartViewScreen> {
   ChartRange _selectedRange = ChartRange.days7;
-  String _selectedLabType = labTypes.first;
+  String _selectedLabType = labTypes.first; // check this for better code?
   late Future<List<LabEntry>> _entriesFuture;
 
   @override
@@ -50,42 +53,79 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
   void _loadLabEntries() {
     final now = DateTime.now();
     final from = now.subtract(Duration(days: _daysForRange(_selectedRange)));
+    final query = (db.select(db.labEntries) // DB query
+        ..where((tbl) => tbl.patientId.equals(widget.patientId)) // ID
+        ..where((tbl) => tbl.type.equals(_selectedLabType)) // Lab Type
+        ..where((tbl) => tbl.date.isBiggerOrEqualValue(from)) // Date Rnage
+        ..orderBy([(t) => OrderingTerm.asc(t.date)]));
 
     setState(() {
-      final query = (db.select(db.labEntries) // DB query
-          ..where((tbl) => tbl.patientId.equals(widget.patientId)) // ID
-          ..where((tbl) => tbl.type.equals(_selectedLabType)) // Lab Type
-          ..where((tbl) => tbl.date.isBiggerOrEqualValue(from)) // Date Rnage
-          ..orderBy([(t) => OrderingTerm.asc(t.date)]));
-        _entriesFuture = query.get();
+      _entriesFuture = query.get();
     });
   }
 
   // Private function to return int days for each ChartRange
-  int _daysForRange(ChartRange range) {
-    switch (range) {
-      case ChartRange.days7:
-        return 7;
-      case ChartRange.days14:
-        return 14;
-      case ChartRange.days30:
-        return 30;
-      case ChartRange.days90:
-        return 90;
+  static const Map<ChartRange, int> _rangeDays = {
+    ChartRange.days7: 7,
+    ChartRange.days14: 14,
+    ChartRange.days30: 30,
+    ChartRange.days90: 90,
+  };
+  int _daysForRange(ChartRange range) => _rangeDays[range]!;
+
+  // Calculate optimal interval for Y axis (Value)
+  double _calculateOptimalInterval(double range) {
+    final magnitude = (math.log(range) / math.ln10).floor();
+    final normalized = range / math.pow(10, magnitude);
+
+    if (normalized <= 2) return 0.2 * math.pow(10, magnitude);
+    if (normalized <= 5) return 0.5 * math.pow(10, magnitude);
+    return math.pow(10, magnitude).toDouble();
+  }
+
+  // Calculate optimal interval for X axis (Date)
+  double _calculateOptimalDateInterval(double range) {
+    const day = 24 * 60 * 60 * 1000.0;
+    if (range <= 7 * day) return 1 * day;      // 1 day interval
+    if (range <= 14 * day) return 2 * day;     // 2 days interval
+    if (range <= 30 * day) return 5 * day;     // 5 days interval
+    return 10 * day;                           // 10 days interval
+  }
+
+  // Turn DB to Spots on the Chart
+  List<FlSpot> dataToSpot(List<LabEntry> data) {
+    final spots = <FlSpot>[];
+    for (var e in data) {
+      final x = e.date.millisecondsSinceEpoch.toDouble();
+      final y = e.value.toDouble();
+      spots.add(FlSpot(x, y));
     }
+    return spots;
   }
 
   @override
   Widget build(BuildContext context) {
     final langLoc = AppLocalizations.of(context)!; // Applocalization Hassle!
+
     return Scaffold(
       body: SafeArea(
+        // Single Scroll View
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Headroom
-              // Anything else?
+              Padding(
+                padding: const EdgeInsets.only(left: 8, top: 8),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back), // Change this for consistency
+                    tooltip: '', // Make tooltip in ARB files
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ),
               // Top Margin
               const SizedBox(height: 100.0),
               Text(
@@ -148,7 +188,7 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
               ),
               // Chart View Panel
               SizedBox(
-                height: 256,
+                height: 200,
                 child: FutureBuilder<List<LabEntry>>(
                   future: _entriesFuture,
                   builder:(context, snapshot) {
@@ -170,99 +210,128 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
                       return Center(child: Text(langLoc.chartNoData));
                     }
                     // Convert spots to FlSpot
-                    final spots = <FlSpot>[];
-                    for (var e in data) {
-                      final x = e.date.millisecondsSinceEpoch.toDouble();
-                      final y = e.value.toDouble();
-                      spots.add(FlSpot(x, y));
-                    }
-                    // Padding (easier?)
+                    List<FlSpot> spots = dataToSpot(data);
+                    // Calculate intervals in single pass
+                    final stats = spots.fold<Map<String, double>>(
+                      {'minY': double.infinity, 'maxY': double.negativeInfinity},
+                      (map, spot) => {
+                      'minY': math.min(map['minY']!, spot.y),
+                      'maxY': math.max(map['maxY']!, spot.y),
+                      },
+                    );
+
                     final minX = spots.first.x;
                     final maxX = spots.last.x;
-                    final values = spots.map((s) => s.y).toList();
-                    final minY = values.reduce((a, b) => a < b ? a : b) * 0.9;
-                    final maxY = values.reduce((a, b) => a > b ? a : b) * 1.1;
+                    final minY = stats['minY']! * 0.9;
+                    final maxY = stats['maxY']! * 1.1;
+
+                    // Optimize intervals for better readability
+                    final dy = maxY - minY;
+                    final yInterval = _calculateOptimalInterval(dy);
+                    final xInterval = _calculateOptimalDateInterval(maxX - minX);
+
                     return Padding(
                       padding: const EdgeInsets.all(16),
                       child: LineChart(
-                        LineChartData(
-                          minX: minX,
-                          minY: minY,
-                          maxX: maxX,
-                          maxY: maxY,
-                          // Draw a Light Grid
-                          gridData: FlGridData(
-                            show: true,
-                            horizontalInterval: (maxY - minY),
-                            getDrawingHorizontalLine: (y) => FlLine(
-                              color: Colors.grey.shade200,
-                              strokeWidth: 1,
-                            ),
-                          ),
-                          // Titles
-                          titlesData: FlTitlesData(
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                reservedSize: 22,
-                                interval: (maxX - minX) / 4,
-                                getTitlesWidget: (value, meta) {
-                                  final date = DateTime.fromMicrosecondsSinceEpoch(value.toInt());
-                                  // Show week dat in Persian format
-                                  final label = DateFormat.Md('fa').format(date);
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 6),
-                                    child: Text(label, style: const TextStyle(fontSize: 10)),
-                                  );
-                                },
-                              ),
-                            ),
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                interval: (maxY - minY),
-                                reservedSize: 22,
-                                getTitlesWidget: (value, meta) {
-                                  return Text(
-                                    value.toStringAsFixed(1), //
-                                    style: const TextStyle(fontSize: 10),
-                                  );
-                                },
-                              ),
-                            ),
-                            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          ),
-                          // Border lines on bottom and left only
-                          borderData: FlBorderData(
-                            show: true,
-                            border: Border(
-                              bottom: BorderSide(color: Colors.grey.shade400, width: 1),
-                              left: BorderSide(color: Colors.grey.shade400, width: 1),
-                              right: BorderSide(color: Colors.transparent),
-                              top: BorderSide(color: Colors.transparent)
-                            ),
-                          ),
-                          lineBarsData: [
-                            LineChartBarData(
-                              spots: spots,
-                              isCurved: false,
-                              color: Theme.of(context).colorScheme.primary,
-                              barWidth: 2,
-                              dotData: FlDotData(
-                                show: true,
-                                getDotPainter: (spot, percent, barData, index) {
-                                  return FlDotCirclePainter(
-                                    radius: 4, // dotSize
-                                    color: Theme.of(context).colorScheme.primary, // dotColor
-                                    strokeWidth: 0,
-                                  );
-                                },
-                              ),
-                              belowBarData: BarAreaData(show: false),
-                            ),
-                          ],
+                      LineChartData(
+                        minX: minX,
+                        minY: minY,
+                        maxX: maxX,
+                        maxY: maxY,
+                        gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: true,
+                        horizontalInterval: yInterval,
+                        verticalInterval: xInterval,
+                        getDrawingHorizontalLine: (y) => FlLine(
+                          color: Colors.grey.shade200,
+                          strokeWidth: 0.5,
                         ),
+                        getDrawingVerticalLine: (x) => FlLine(
+                          color: Colors.grey.shade100,
+                          strokeWidth: 0.5,
+                        ),
+                        ),
+                        titlesData: FlTitlesData(
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 30,
+                          interval: xInterval,
+                          getTitlesWidget: (value, meta) {
+                            final date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+                            final jalaliDate = Jalali.fromDateTime(date);
+                            return RotatedBox(
+                            quarterTurns: 1,
+                            child: Text(
+                              '${jalaliDate.month}/${jalaliDate.day}',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            );
+                          },
+                          ),
+                        ),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: yInterval,
+                          reservedSize: 40,
+                          getTitlesWidget: (value, meta) => Text(
+                            value.toStringAsFixed(1),
+                            style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey.shade600,
+                            ),
+                          ),
+                          ),
+                        ),
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        ),
+                        lineBarsData: [
+                        LineChartBarData(
+                          spots: spots,
+                          isCurved: true,
+                          curveSmoothness: 0.2,
+                          color: Theme.of(context).colorScheme.primary,
+                          barWidth: 2,
+                          dotData: FlDotData(
+                          show: true,
+                          getDotPainter: (spot, percent, barData, index) =>
+                            FlDotCirclePainter(
+                            radius: 3,
+                            color: Theme.of(context).colorScheme.primary,
+                            strokeWidth: 1,
+                            strokeColor: Colors.white,
+                            ),
+                          ),
+                          belowBarData: BarAreaData(
+                          show: true,
+                          color: Theme.of(context).colorScheme.primary
+                            .withValues(alpha: 0.1),
+                          ),
+                        ),
+                        ],
+                        lineTouchData: LineTouchData(
+                        touchTooltipData: LineTouchTooltipData(
+                          getTooltipColor: (LineBarSpot touchedSpot) {
+                            return Colors.white.withValues(alpha: 0.8);
+                          },
+                          tooltipBorderRadius: BorderRadius.circular(8),
+                          tooltipPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          tooltipMargin: 16,
+                          fitInsideHorizontally: true,
+                          fitInsideVertically: true,
+                        ),
+                        ),
+                      ),
                       ),
                     );
                   },
@@ -275,5 +344,4 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
       ),
     );
   }
-
 }
