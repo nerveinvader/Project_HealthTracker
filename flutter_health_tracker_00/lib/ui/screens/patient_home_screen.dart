@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
 import 'chart_view_screen.dart'; // Chart View Dashboard
-import 'patient_form_screen.dart';
 import 'lab_entry_form_screen.dart'; // Lab entry
 import 'medication_form_screen.dart'; // Medication Entry
 import 'disease_dashboard_screen.dart'; // Disease Specific Dashboard
