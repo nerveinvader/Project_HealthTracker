@@ -20,8 +20,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../l10n/app_localizations.dart';
 import '../../data/local/app_db.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart'; //?
+//import 'package:intl/intl.dart';
+import 'patient_list_screen.dart'; //?
+import '../public_classes.dart';
 
 // Chart Lab types
 const List<String> labTypes = [
@@ -32,7 +33,8 @@ enum ChartRange { days7, days14, days30, days90 }
 
 class ChartViewScreen extends StatefulWidget {
   final String patientId;
-  const ChartViewScreen({super.key, required this.patientId});
+  final String patientLabType;
+  const ChartViewScreen({super.key, required this.patientId, this.patientLabType = 'HbA1c'});
 
   @override
   State<ChartViewScreen> createState() => _ChartViewScreenState();
@@ -46,6 +48,7 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
   @override
   void initState() {
     super.initState();
+    _selectedLabType = widget.patientLabType;
     _loadLabEntries();
   }
 
@@ -120,7 +123,7 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back), // Change this for consistency
+                    icon: const Icon(Icons.arrow_back_ios), // Change this for consistency
                     tooltip: '', // Make tooltip in ARB files
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -233,105 +236,105 @@ class _ChartViewScreenState extends State<ChartViewScreen> {
                     return Padding(
                       padding: const EdgeInsets.all(16),
                       child: LineChart(
-                      LineChartData(
-                        minX: minX,
-                        minY: minY,
-                        maxX: maxX,
-                        maxY: maxY,
-                        gridData: FlGridData(
-                        show: true,
-                        drawVerticalLine: true,
-                        horizontalInterval: yInterval,
-                        verticalInterval: xInterval,
-                        getDrawingHorizontalLine: (y) => FlLine(
-                          color: Colors.grey.shade200,
-                          strokeWidth: 0.5,
-                        ),
-                        getDrawingVerticalLine: (x) => FlLine(
-                          color: Colors.grey.shade100,
-                          strokeWidth: 0.5,
-                        ),
-                        ),
-                        titlesData: FlTitlesData(
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 30,
-                          interval: xInterval,
-                          getTitlesWidget: (value, meta) {
-                            final date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
-                            final jalaliDate = Jalali.fromDateTime(date);
-                            return RotatedBox(
-                            quarterTurns: 1,
-                            child: Text(
-                              '${jalaliDate.month}/${jalaliDate.day}',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.grey.shade600,
+                        LineChartData(
+                          minX: minX,
+                          minY: minY,
+                          maxX: maxX,
+                          maxY: maxY,
+                          gridData: FlGridData(
+                            show: true,
+                            drawVerticalLine: true,
+                            horizontalInterval: yInterval,
+                            verticalInterval: xInterval,
+                            getDrawingHorizontalLine: (y) => FlLine(
+                            color: Colors.grey.shade200,
+                            strokeWidth: 0.5,
+                          ),
+                          getDrawingVerticalLine: (x) => FlLine(
+                            color: Colors.grey.shade100,
+                            strokeWidth: 0.5,
+                            ),
+                          ),
+                          titlesData: FlTitlesData(
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 30,
+                                interval: xInterval,
+                                getTitlesWidget: (value, meta) {
+                                  final date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+                                  final jalaliDate = Jalali.fromDateTime(date);
+                                  return RotatedBox(
+                                    quarterTurns: 1,
+                                    child: Text(
+                                        '${persianizeNumber(jalaliDate.month.toString())}/${persianizeNumber(jalaliDate.day.toString())}',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                            );
-                          },
-                          ),
-                        ),
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                          showTitles: true,
-                          interval: yInterval,
-                          reservedSize: 40,
-                          getTitlesWidget: (value, meta) => Text(
-                            value.toStringAsFixed(1),
-                            style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey.shade600,
+                            leftTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                interval: yInterval,
+                                reservedSize: 22,
+                                getTitlesWidget: (value, meta) => Text(
+                                  value.toStringAsFixed(1),
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            rightTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false,),
+                            ),
+                            topTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
                             ),
                           ),
-                          ),
-                        ),
-                        rightTitles: AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        topTitles: AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        ),
-                        lineBarsData: [
-                        LineChartBarData(
-                          spots: spots,
-                          isCurved: true,
-                          curveSmoothness: 0.2,
-                          color: Theme.of(context).colorScheme.primary,
-                          barWidth: 2,
-                          dotData: FlDotData(
-                          show: true,
-                          getDotPainter: (spot, percent, barData, index) =>
-                            FlDotCirclePainter(
-                            radius: 3,
-                            color: Theme.of(context).colorScheme.primary,
-                            strokeWidth: 1,
-                            strokeColor: Colors.white,
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: spots,
+                              isCurved: true,
+                              curveSmoothness: 0.2,
+                              color: Theme.of(context).colorScheme.primary,
+                              barWidth: 2,
+                              dotData: FlDotData(
+                              show: true,
+                              getDotPainter: (spot, percent, barData, index) =>
+                                FlDotCirclePainter(
+                                radius: 3,
+                                color: Theme.of(context).colorScheme.primary,
+                                strokeWidth: 1,
+                                strokeColor: Colors.white,
+                                ),
+                              ),
+                              belowBarData: BarAreaData(
+                              show: true,
+                              color: Theme.of(context).colorScheme.primary
+                                .withValues(alpha: 0.1),
+                              ),
+                            ),
+                          ],
+                          lineTouchData: LineTouchData(
+                            touchTooltipData: LineTouchTooltipData(
+                              getTooltipColor: (LineBarSpot touchedSpot) {
+                                return Colors.white.withValues(alpha: 0.8);
+                              },
+                              tooltipBorderRadius: BorderRadius.circular(8),
+                              tooltipPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              tooltipMargin: 16,
+                              fitInsideHorizontally: true,
+                              fitInsideVertically: true,
                             ),
                           ),
-                          belowBarData: BarAreaData(
-                          show: true,
-                          color: Theme.of(context).colorScheme.primary
-                            .withValues(alpha: 0.1),
-                          ),
                         ),
-                        ],
-                        lineTouchData: LineTouchData(
-                        touchTooltipData: LineTouchTooltipData(
-                          getTooltipColor: (LineBarSpot touchedSpot) {
-                            return Colors.white.withValues(alpha: 0.8);
-                          },
-                          tooltipBorderRadius: BorderRadius.circular(8),
-                          tooltipPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          tooltipMargin: 16,
-                          fitInsideHorizontally: true,
-                          fitInsideVertically: true,
-                        ),
-                        ),
-                      ),
                       ),
                     );
                   },
