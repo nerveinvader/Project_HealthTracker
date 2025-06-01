@@ -36,14 +36,8 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     final langLoc = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: CustomPaint(painter: GradientBackground(context),),
-          ),
-          SafeArea(
-            child: ListView(
+    // ListView Local Var for better readability (testing)
+    var listView = ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 Text(
@@ -52,7 +46,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 // Profile
                 ListTile(
-                  leading: const Icon(Icons.edit),
+                  leading: const Icon(Icons.person),
                   title: Text(langLoc.setEditProfile),
                   onTap:  () {
                     Navigator.push(
@@ -69,6 +63,8 @@ class _SettingScreenState extends State<SettingScreen> {
                 const SizedBox(height: 8),
                 SwitchListTile(
                   title: Text(langLoc.setReminder),
+                  secondary: Icon(Icons.notifications),
+                  inactiveTrackColor: Colors.grey,
                   value: _reminderEnabled,
                   onChanged: (val) {
                     setState(() {
@@ -79,6 +75,8 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 SwitchListTile(
                   title: Text(langLoc.setNotifSound),
+                  secondary: Icon(Icons.notifications_active),
+                  inactiveTrackColor: Colors.grey,
                   value: _soundEnabled,
                   onChanged: (val) {
                     setState(() {
@@ -87,7 +85,8 @@ class _SettingScreenState extends State<SettingScreen> {
                     // SAVE SETTING STATES
                   }
                 ),
-                const Divider(),
+                // Language and Sync
+                const SizedBox(height: 8),
                 Text(
                   langLoc.setLangSync,
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -111,8 +110,11 @@ class _SettingScreenState extends State<SettingScreen> {
                     }
                   ),
                 ),
+                // Sync
                 SwitchListTile(
                   title: Text(langLoc.setSync),
+                  secondary: Icon(Icons.sync),
+                  inactiveTrackColor: Colors.grey,
                   value: _syncEnabled,
                   onChanged: (val) {
                     setState(() {
@@ -121,7 +123,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     // SAVE SETTING STATES
                   }
                 ),
-                const Divider(),
+                const SizedBox(height: 8),
                 // Logout
                 ListTile(
                   leading: const Icon(Icons.logout),
@@ -132,6 +134,39 @@ class _SettingScreenState extends State<SettingScreen> {
                       MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   }
+                ),
+              ],
+            );
+    // Main Page Scaffold
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: GradientBackground(context),),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                // Headroom with Back button
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, top: 8),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back_ios), // Change this for consistency
+                      tooltip: '', // Make tooltip in ARB files
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 64.0),
+                Text(
+                  AppLocalizations.of(context)!.setEditProfile,
+                  style: Theme.of(context).textTheme.displaySmall,
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: listView
                 ),
               ],
             ),

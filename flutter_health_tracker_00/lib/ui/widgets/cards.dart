@@ -75,35 +75,94 @@ class LearnMoreCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.0),
-      child: Container(
-        width: double.infinity,
-        height: 100.0,
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 16.0,
-              offset: Offset(0, 2.0),
-            )
-          ],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                text,
-                style: Theme.of(context).textTheme.titleLarge,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          ClipPath(
+            clipper: LargeCardClipper(),
+            child: Container(
+              width: 512,
+              height: 100,
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 16.0,
+                    offset: Offset(0, 2.0),
+                  )
+                ],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  text,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, size: 16),
-          ],
-        ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: ClipPath(
+              clipper: SmallCardClipper(),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                width: 90,
+                height: 100.0,
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.7),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 16.0,
+                      offset: Offset(0, 2.0),
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.arrow_forward_ios, size: 16),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
+}
+
+class SmallCardClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(size.width * 0.8, 0);
+    path.lineTo(size.width * 0.4, size.height);
+    path.lineTo(0, size.height);
+    path.lineTo(0, 0);
+    path.close();
+    return path;
+  }
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+class LargeCardClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.moveTo(size.width, size.height);
+    path.lineTo(size.width * 0.15, size.height);
+    path.lineTo(size.width * 0.25, 0);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
 ///////////////////////////////

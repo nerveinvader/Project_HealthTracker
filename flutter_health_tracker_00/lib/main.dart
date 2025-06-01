@@ -21,7 +21,7 @@ class HealthTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Theme Data
-    final primary = const Color.fromARGB(255, 113, 116, 187);
+    final primary = const Color.fromARGB(255, 130, 133, 219);
     final secondary = const Color(0xFFEE74B1);
     final bgLight = const Color(0xFFFFD4EB);
     final surfaceColor = const Color(0xFFFFFFFF);
