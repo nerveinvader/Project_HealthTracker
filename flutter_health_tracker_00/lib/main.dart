@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_health_tracker_00/ui/reminder_service.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -11,6 +12,10 @@ import 'ui/screens/patient_home_screen.dart';
 
 void main() async {
   await dotenv.load(); // load the .env file
+  // Reminder Service
+  WidgetsFlutterBinding.ensureInitialized();
+  await ReminderService.instance.init();
+  // Run App
   runApp(const HealthTracker());
 }
 

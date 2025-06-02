@@ -4,6 +4,8 @@
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_health_tracker_00/ui/reminder_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
 import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -83,6 +85,12 @@ class _LabEntryFormScreenState extends State<LabEntryFormScreen> {
       await db.into(db.labEntries).insert(comp);
     } else {
       await db.update(db.labEntries).replace(comp);
+    }
+    // Check for reminder setting
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('_reminderEnabled') ?? false) {
+      await ReminderService.instance
+        .scheduleLabReminders(_type, _date);
     }
     if (!navContext.mounted) return;
     Navigator.pop(navContext);

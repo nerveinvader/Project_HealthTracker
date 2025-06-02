@@ -11,6 +11,7 @@
 // Sync (online or offline)
 
 import 'package:flutter/material.dart';
+import 'package:flutter_health_tracker_00/ui/reminder_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -127,11 +128,17 @@ class _SettingScreenState extends State<SettingScreen> {
                   secondary: Icon(Icons.notifications),
                   inactiveTrackColor: Colors.grey,
                   value: _reminderEnabled,
-                  onChanged: (val) {
+                  onChanged: (val) async {
                     setState(() {
                       _reminderEnabled = val;
                     });
-                    _saveBoolPreference(_kReminderKey, val); // SAVE SETTING STATES
+                    await _saveBoolPreference(_kReminderKey, val); // SAVE SETTING STATES
+                    if (val) {
+                      ReminderService.instance.scheduleMedReminders();
+                    } else {
+                      ReminderService.instance.cancelMedReminder();
+                      ReminderService.instance.cancelLabReminder();
+                    }
                   }
                 ),
                 // NOTIF SOUND
