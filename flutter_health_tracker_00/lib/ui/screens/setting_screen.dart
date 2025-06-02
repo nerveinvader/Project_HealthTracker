@@ -11,6 +11,7 @@
 // Sync (online or offline)
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
 
 import 'login_screen.dart';
@@ -25,12 +26,71 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  // Default toggles
+  // Preference keys
+  static const _kReminderKey = 'pref_reminder_enabled';
+  static const _kSoundKey = 'pref_sound_enabled';
+  static const _kAutoSyncKey = 'pref_sync_enabled';
+  static const _kLanguageKey = 'pref_language_key';
+
+  // Default toggles -in Memory
   bool _reminderEnabled = false;
   bool _soundEnabled = false;
   bool _syncEnabled = false;
-  // Language selection
   String _appLanguage = 'fa';
+
+  // Loading
+  bool _loading = true;
+
+  // Load preferences from shared_preferences.
+  Future<void> _loadPreference() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final reminders = prefs.getBool(_kReminderKey) ?? false;
+      final sound = prefs.getBool(_kSoundKey) ?? false;
+      final autosync = prefs.getBool(_kAutoSyncKey) ?? false;
+      final language = prefs.getString(_kLanguageKey) ?? 'fa';
+
+      if (!mounted) return;
+      setState(() {
+        _reminderEnabled = reminders;
+        _soundEnabled = sound;
+        _syncEnabled = autosync;
+        _appLanguage = language;
+        _loading = false;
+      });
+    } catch (e, st) {
+      // Fallback to defaults if anything was wrong
+      debugPrint('Error Loading SharedPreferences: $e\n$st');
+      if (!mounted) return;
+      setState(() {
+        _reminderEnabled = false;
+        _soundEnabled = false;
+        _syncEnabled = false;
+        _appLanguage = 'fa';
+        _loading = false;
+      });
+    }
+  }
+
+  // Save a single bool preference under [key]
+  Future<void> _saveBoolPreference(String key, bool value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(key, value);
+    } catch (e, st) {
+      debugPrint('Error Saving Bool Prefs ($key): $e\n$st');
+    }
+  }
+
+  // Save the Selected Language for the App
+  Future<void> _saveStringPreference(String key, String value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(key, value);
+    } catch (e, st) {
+      debugPrint('Error Saving String Prefs ($key): $e\n$st');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +121,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
+                // REMINDER
                 SwitchListTile(
                   title: Text(langLoc.setReminder),
                   secondary: Icon(Icons.notifications),
@@ -70,9 +131,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     setState(() {
                       _reminderEnabled = val;
                     });
-                    // SAVE SETTING STATES
+                    _saveBoolPreference(_kReminderKey, val); // SAVE SETTING STATES
                   }
                 ),
+                // NOTIF SOUND
                 SwitchListTile(
                   title: Text(langLoc.setNotifSound),
                   secondary: Icon(Icons.notifications_active),
@@ -82,7 +144,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     setState(() {
                       _soundEnabled = val;
                     });
-                    // SAVE SETTING STATES
+                    _saveBoolPreference(_kSoundKey, val); // SAVE SETTING STATES
                   }
                 ),
                 // Language and Sync
@@ -92,6 +154,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
+                // LANGUAGE
                 ListTile(
                   leading: const Icon(Icons.language),
                   title: Text(langLoc.setAppLang),
@@ -106,11 +169,12 @@ class _SettingScreenState extends State<SettingScreen> {
                       setState(() {
                         _appLanguage = val;
                       });
-                      // SAVE SETTING
+                      _saveStringPreference(_kLanguageKey, val); // SAVE SETTING STATES
+                      // to Rebuild the app => wrap MaterialApp with ValueNotifier or Provider...
                     }
                   ),
                 ),
-                // Sync
+                // SYNC
                 SwitchListTile(
                   title: Text(langLoc.setSync),
                   secondary: Icon(Icons.sync),
@@ -120,7 +184,8 @@ class _SettingScreenState extends State<SettingScreen> {
                     setState(() {
                       _syncEnabled = val;
                     });
-                    // SAVE SETTING STATES
+                    _saveBoolPreference(_kAutoSyncKey, val); // SAVE SETTING STATES
+                    // TO DO SYNC
                   }
                 ),
                 const SizedBox(height: 8),
@@ -137,6 +202,12 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               ],
             );
+    // Loading
+    if (_loading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(),),
+      );
+    }
     // Main Page Scaffold
     return Scaffold(
       body: Stack(
