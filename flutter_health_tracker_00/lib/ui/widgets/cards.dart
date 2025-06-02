@@ -10,9 +10,12 @@ import '../../l10n/app_localizations.dart';
 // Disease Specific Card
 class DiseaseCard extends StatelessWidget {
   final String title;
+  final String navPage;
   final String value;
   final VoidCallback onTap;
-  const DiseaseCard({super.key, required this.title, required this.value, required this.onTap});
+  const DiseaseCard({super.key, required this.title, required this.navPage, required this.value, required this.onTap});
+
+  // get the latest lab type date of it.
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +57,10 @@ class DiseaseCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall!,
                 ),
               ],
+            ),
+            Text(
+              navPage,
+              style: Theme.of(context).textTheme.titleLarge!,
             ),
             const Icon(Icons.arrow_forward_ios, size: 16),
           ],

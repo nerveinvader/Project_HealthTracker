@@ -197,6 +197,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                             SizedBox(
                               child: DiseaseCard(
                                 title: langLoc.uiLastBP,
+                                navPage: langLoc.uiHTN,
                                 value: _bloodPressure,
                                 onTap: () async {
                                   await Navigator.push(
@@ -219,6 +220,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                             SizedBox(
                               child: DiseaseCard(
                                 title: langLoc.uiLastFBS,
+                                navPage: langLoc.uiDM,
                                 value: _fbs,
                                 onTap: () async {
                                   await Navigator.push(
@@ -241,6 +243,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                             SizedBox(
                               child: DiseaseCard(
                                 title: langLoc.uiLastChol,
+                                navPage: langLoc.uiHLP,
                                 value: _cholesterol,
                                 onTap: () async {
                                   await Navigator.push(
