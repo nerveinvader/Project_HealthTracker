@@ -132,10 +132,10 @@ class ReminderService {
 			final trigger = triggers[i];
       final tzTrigger = tz.TZDateTime.from(trigger, tz.local);
       // DEBUG
-      debugPrint('------- RS - Reminder #${i + 1} -------');
-      debugPrint('RS - Trigger time: ${tzTrigger.toString()}');
-      debugPrint('RS - Current time: ${tz.TZDateTime.now(tz.local).toString()}');
-      debugPrint('RS - Notification ID: ${base + i}');
+      // debugPrint('------- RS - Reminder #${i + 1} -------');
+      // debugPrint('RS - Trigger time: ${tzTrigger.toString()}');
+      // debugPrint('RS - Current time: ${tz.TZDateTime.now(tz.local).toString()}');
+      // debugPrint('RS - Notification ID: ${base + i}');
 
       if (tzTrigger.isBefore(tz.TZDateTime.now(tz.local))) {
         debugPrint('RS - Target time is in past, skipping...');
@@ -165,7 +165,6 @@ class ReminderService {
           // Add a payload to identify the notification
           payload: 'RS - lab_reminder_$labType _${DateTime.now().toIso8601String()}',
         );
-        debugPrint('RS - Scheduled $labType reminder for: ${tzTrigger.toString()}');
       } catch (e, st) {
         debugPrint('RS - Lab Scheduling Failed: $e\n$st');
       }

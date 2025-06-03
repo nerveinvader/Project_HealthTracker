@@ -255,12 +255,10 @@ class _SettingScreenState extends State<SettingScreen> {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('SS - Reminder scheduled for 10 seconds from now'),
+                          content: Text('SS - Reminder Scheduled'),
                         ),
                       );
-                      debugPrint('SS - Reminder scheduled for: ${testTime.toString()}');
                     } catch (e) {
-                      debugPrint('SS - Failed to schedule reminder: $e');
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('SS - Error: $e'))
