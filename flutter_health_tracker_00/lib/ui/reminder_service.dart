@@ -52,6 +52,32 @@ class ReminderService {
       //  debugPrint('Exact alarms permission not granted');
       //}
 
+      // Define notification channels
+      const AndroidNotificationChannel medChannel = AndroidNotificationChannel(
+        'med_channel',
+        'Medication Reminders',
+        description: 'Channel for daily medication reminders.',
+        importance: Importance.max,
+        playSound: true,
+        enableVibration: true,
+      );
+      const AndroidNotificationChannel labChannel = AndroidNotificationChannel(
+        'lab_channel',
+        'Lab Test Reminders',
+        description: 'Channel for follow-up lab test reminders.',
+        importance: Importance.max,
+        playSound: true,
+        enableVibration: true,
+      );
+
+      // Create the notification channels
+      await _flnp
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(medChannel);
+      await _flnp
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(labChannel);
+
       // Plugin init
       const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosInit = DarwinInitializationSettings();
@@ -91,10 +117,12 @@ class ReminderService {
           first,
           const NotificationDetails(
             android: AndroidNotificationDetails(
-              'med_channel',
-              'Medication',
+              'med_channel', // Ensure this matches the channel ID
+              'Medication Reminders', // Channel name
               channelDescription: 'Daily Medication Reminders',
-              importance: Importance.high,
+              importance: Importance.high, // Importance for this specific notification
+              playSound: true,
+              enableVibration: true,
             ),
             iOS: DarwinNotificationDetails(),
           ),
@@ -150,10 +178,10 @@ class ReminderService {
           tzTrigger,
           const NotificationDetails(
             android: AndroidNotificationDetails(
-              'lab_channel',
-              'Lab',
+              'lab_channel', // Ensure this matches the channel ID
+              'Lab Test Reminders', // Channel name
               channelDescription: 'Follow-up Lab Reminders',
-              importance: Importance.high,
+              importance: Importance.high, // Importance for this specific notification
               enableVibration: true,
               playSound: true,
               ticker: 'RS - Lab reminder DEBUG',

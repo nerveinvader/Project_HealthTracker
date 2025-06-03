@@ -236,14 +236,32 @@ class _SettingScreenState extends State<SettingScreen> {
                   title: const Text('Test Lab Reminder'),
                   onTap: () async {
                     try {
-                      // Check permissions first
                       final service = ReminderService.instance;
-                      // Check current permission state
-                      debugPrint('SS - Current permission state: ${service.grantedPermission}');
-                      // If not permitted
-                      if (!service.grantedPermission) {
+                      // Check permissions first
+                      final hasNotificationPermission = await service.androidPermission?.requestNotificationsPermission() ?? false;
+                      if (!hasNotificationPermission) {
+                        if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('SS - Notification permission not granted!')),
+                        );
+                        return;
+                      }
+
+                      // Crucially, check for exact alarm permission
+                      final hasExactAlarmsPermission = await service.androidPermission?.requestExactAlarmsPermission() ?? false;
+                      debugPrint('SS - Exact Alarms Permission for Test: $hasExactAlarmsPermission'); // For debugging
+                      if (!hasExactAlarmsPermission) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('SS - Exact alarm permission is required for this test.'),
+                            action: SnackBarAction( // Guide user to settings
+                              label: 'Settings',
+                              onPressed: () {
+                                service.androidPermission?.requestExactAlarmsPermission();
+                              },
+                            ),
+                          ),
                         );
                         return;
                       }
@@ -255,13 +273,14 @@ class _SettingScreenState extends State<SettingScreen> {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('SS - Reminder Scheduled'),
+                          content: Text('SS - Lab Reminder Scheduled for 10 seconds from now.'),
                         ),
                       );
-                    } catch (e) {
+                    } catch (e, st) { // Added stack trace for better debugging
+                      debugPrint('SS - Error in Test Lab Reminder: $e\n$st');
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('SS - Error: $e'))
+                        SnackBar(content: Text('SS - Error: $e')),
                       );
                     }
                   },
