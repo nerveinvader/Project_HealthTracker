@@ -11,12 +11,12 @@
 // Sync (online or offline)
 
 import 'package:flutter/material.dart';
-import 'package:flutter_health_tracker_00/ui/reminder_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
 
 import 'login_screen.dart';
 import 'patient_form_screen.dart';
+import '../../ui/reminder_service.dart'; // REMINDER TEST
 import '../../ui/theme/theme_related.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -32,8 +32,7 @@ class _SettingScreenState extends State<SettingScreen> {
   static const _kSoundKey = 'pref_sound_enabled';
   static const _kAutoSyncKey = 'pref_sync_enabled';
   static const _kLanguageKey = 'pref_language_key';
-
-  // Default toggles -in Memory
+  // Default toggles
   bool _reminderEnabled = false;
   bool _soundEnabled = false;
   bool _syncEnabled = false;
@@ -56,7 +55,7 @@ class _SettingScreenState extends State<SettingScreen> {
       final sound = prefs.getBool(_kSoundKey) ?? false;
       final autosync = prefs.getBool(_kAutoSyncKey) ?? false;
       final language = prefs.getString(_kLanguageKey) ?? 'fa';
-      debugPrint('Error Loading');
+
       if (!mounted) return;
       setState(() {
         _reminderEnabled = reminders;
@@ -99,12 +98,25 @@ class _SettingScreenState extends State<SettingScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final langLoc = AppLocalizations.of(context)!;
 
-    // ListView Local Var for better readability (testing)
-    var listView = ListView(
+    // Loading
+    if (_loading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(),),
+      );
+    }
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: GradientBackground(context),),
+          ),
+          SafeArea(
+            child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 Text(
@@ -135,10 +147,25 @@ class _SettingScreenState extends State<SettingScreen> {
                   inactiveTrackColor: Colors.grey,
                   value: _reminderEnabled,
                   onChanged: (val) async {
+                    if (val) {
+                      // Check permissions when enabling
+                      final service = ReminderService.instance;
+                      final hasPermission = await service.androidPermission?.requestNotificationsPermission() ?? false;
+                      final hasExactAlarms = await service.androidPermission?.requestExactAlarmsPermission() ?? false;
+                      if (!hasPermission || !hasExactAlarms) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Notification Permission Required for Reminders'),
+                          ),
+                        );
+                        return;
+                      }
+                    }
                     setState(() {
                       _reminderEnabled = val;
                     });
-                    await _saveBoolPreference(_kReminderKey, val); // SAVE SETTING STATES
+                     _saveBoolPreference(_kReminderKey, val);
                     if (val) {
                       ReminderService.instance.scheduleMedReminders();
                     } else {
@@ -157,17 +184,15 @@ class _SettingScreenState extends State<SettingScreen> {
                     setState(() {
                       _soundEnabled = val;
                     });
-                    _saveBoolPreference(_kSoundKey, val); // SAVE SETTING STATES
+                    _saveBoolPreference(_kSoundKey, val);
                   }
                 ),
-                // Language and Sync
-                const SizedBox(height: 8),
+                const Divider(),
                 Text(
                   langLoc.setLangSync,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
-                // LANGUAGE
                 ListTile(
                   leading: const Icon(Icons.language),
                   title: Text(langLoc.setAppLang),
@@ -182,8 +207,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       setState(() {
                         _appLanguage = val;
                       });
-                      _saveStringPreference(_kLanguageKey, val); // SAVE SETTING STATES
-                      // to Rebuild the app => wrap MaterialApp with ValueNotifier or Provider...
+                      _saveStringPreference(_kLanguageKey, val);
                     }
                   ),
                 ),
@@ -197,11 +221,49 @@ class _SettingScreenState extends State<SettingScreen> {
                     setState(() {
                       _syncEnabled = val;
                     });
-                    _saveBoolPreference(_kAutoSyncKey, val); // SAVE SETTING STATES
-                    // TO DO SYNC
+                    _saveBoolPreference(_kAutoSyncKey, val);
                   }
                 ),
-                const SizedBox(height: 8),
+                // DEBUG //
+                Text(
+                  'DEBUG REMINDER',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                ListTile(
+                  leading: const Icon(Icons.bug_report),
+                  title: const Text('Test Lab Reminder'),
+                  onTap: () async {
+                    try {
+                      // Check permissions first
+                      final service = ReminderService.instance;
+                      if (!service.grantedPermission) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Notification permission not granted!')),
+                        );
+                        return;
+                      }
+
+                      // Schedule test notification
+                      final testTime = DateTime.now().add(const Duration(seconds: 10));
+                      await service.scheduleLabReminders('HbA1c', testTime);
+
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Reminder scheduled for 10 seconds from now'),
+                        ),
+                      );
+                      debugPrint('Reminder scheduled for: ${testTime.toString()}');
+                    } catch (e) {
+                      debugPrint('Failed to schedule reminder: $e');
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error: $e'))
+                      );
+                    }
+                  },
+                ),
+                const Divider(),
                 // Logout
                 ListTile(
                   leading: const Icon(Icons.logout),
@@ -212,45 +274,6 @@ class _SettingScreenState extends State<SettingScreen> {
                       MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   }
-                ),
-              ],
-            );
-    // Loading
-    if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator(),),
-      );
-    }
-    // Main Page Scaffold
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: CustomPaint(painter: GradientBackground(context),),
-          ),
-          SafeArea(
-            child: Column(
-              children: [
-                // Headroom with Back button
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 8),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios), // Change this for consistency
-                      tooltip: '', // Make tooltip in ARB files
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 64.0),
-                Text(
-                  AppLocalizations.of(context)!.setEditProfile,
-                  style: Theme.of(context).textTheme.displaySmall,
-                ),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: listView
                 ),
               ],
             ),
