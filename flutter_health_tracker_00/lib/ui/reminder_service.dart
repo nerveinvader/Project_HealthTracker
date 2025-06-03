@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tzdb;
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 class ReminderService {
   ReminderService._interal();
@@ -27,7 +27,7 @@ class ReminderService {
   Future<void> init() async {
     // TZ DB init
     tzdb.initializeTimeZones();
-    final localName = await FlutterNativeTimezone.getLocalTimezone();
+    final localName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(localName));
 
     // Plugin init
