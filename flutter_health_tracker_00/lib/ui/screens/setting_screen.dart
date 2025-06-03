@@ -109,14 +109,7 @@ class _SettingScreenState extends State<SettingScreen> {
         body: Center(child: CircularProgressIndicator(),),
       );
     }
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: CustomPaint(painter: GradientBackground(context),),
-          ),
-          SafeArea(
-            child: ListView(
+    var listView = ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 Text(
@@ -274,6 +267,38 @@ class _SettingScreenState extends State<SettingScreen> {
                       MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   }
+                ),
+              ],
+            );
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: GradientBackground(context),),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                // Headroom with Back button
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, top: 8),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back_ios), // Change this for consistency
+                      tooltip: '', // Make tooltip in ARB files
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 64.0),
+                Text(
+                  AppLocalizations.of(context)!.setEditProfile,
+                  style: Theme.of(context).textTheme.displaySmall,
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: listView
                 ),
               ],
             ),
