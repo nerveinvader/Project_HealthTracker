@@ -149,7 +149,16 @@ class _SettingScreenState extends State<SettingScreen> {
                         if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Notification Permission Required for Reminders'),
+                            content: Text(!hasPermission
+                              ? 'Notification permission denied'
+                              : 'Exact alarm permission denied'),
+                            action: SnackBarAction(
+                              label: 'Settings',
+                              onPressed: () {
+                                // Open app settings
+                                service.androidPermission?.requestNotificationsPermission();
+                              },
+                            ),
                           ),
                         );
                         return;
@@ -158,7 +167,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     setState(() {
                       _reminderEnabled = val;
                     });
-                     _saveBoolPreference(_kReminderKey, val);
+                     await _saveBoolPreference(_kReminderKey, val);
                     if (val) {
                       ReminderService.instance.scheduleMedReminders();
                     } else {
@@ -167,7 +176,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     }
                   }
                 ),
-                // NOTIF SOUND
+                // NOTIF SOUND ///////////////////////////////////////// DELETE THIS!
                 SwitchListTile(
                   title: Text(langLoc.setNotifSound),
                   secondary: Icon(Icons.notifications_active),
@@ -229,9 +238,12 @@ class _SettingScreenState extends State<SettingScreen> {
                     try {
                       // Check permissions first
                       final service = ReminderService.instance;
+                      // Check current permission state
+                      debugPrint('SS - Current permission state: ${service.grantedPermission}');
+                      // If not permitted
                       if (!service.grantedPermission) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Notification permission not granted!')),
+                          const SnackBar(content: Text('SS - Notification permission not granted!')),
                         );
                         return;
                       }
@@ -243,15 +255,15 @@ class _SettingScreenState extends State<SettingScreen> {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Reminder scheduled for 10 seconds from now'),
+                          content: Text('SS - Reminder scheduled for 10 seconds from now'),
                         ),
                       );
-                      debugPrint('Reminder scheduled for: ${testTime.toString()}');
+                      debugPrint('SS - Reminder scheduled for: ${testTime.toString()}');
                     } catch (e) {
-                      debugPrint('Failed to schedule reminder: $e');
+                      debugPrint('SS - Failed to schedule reminder: $e');
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error: $e'))
+                        SnackBar(content: Text('SS - Error: $e'))
                       );
                     }
                   },
