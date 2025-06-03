@@ -9,9 +9,14 @@ import 'package:timezone/data/latest.dart' as tzdb;
 import 'package:flutter_timezone/flutter_timezone.dart';
 
 class ReminderService {
-  ReminderService._interal();
-  static final ReminderService instance = ReminderService._interal();
+  ReminderService._internal();
+  static final ReminderService instance = ReminderService._internal();
   final FlutterLocalNotificationsPlugin _flnp = FlutterLocalNotificationsPlugin();
+  // Permission for Notifications
+  AndroidFlutterLocalNotificationsPlugin? get androidPermission =>
+    _flnp.resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>();
+  late final bool grantedPermission;
 
   // IDs for MVP (reserved)
   static const _medIds = [100, 101, 102]; // 8 / 12 / 20 hours
@@ -25,17 +30,31 @@ class ReminderService {
 
   // Call in main() once
   Future<void> init() async {
-    // TZ DB init
-    tzdb.initializeTimeZones();
-    final localName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(localName));
+    try {
+      // TZ DB init
+      tzdb.initializeTimeZones();
+      final localName = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(localName));
 
-    // Plugin init
-    const androidInit = AndroidInitializationSettings('app_icon');
-    const iosInit = DarwinInitializationSettings();
-    await _flnp.initialize(
-      const InitializationSettings(android: androidInit, iOS: iosInit)
-    );
+      // Request Notification permission
+      grantedPermission = await androidPermission?.requestNotificationsPermission() ?? false;
+      final hasExactAlarms = await androidPermission?.requestExactAlarmsPermission() ?? false;
+      if ((!hasExactAlarms)) {
+        debugPrint('Exact alarms permission not granted');
+      }
+
+      // Plugin init
+      const androidInit = AndroidInitializationSettings('app_icon');
+      const iosInit = DarwinInitializationSettings();
+      await _flnp.initialize(
+        const InitializationSettings(android: androidInit, iOS: iosInit),
+        onDidReceiveNotificationResponse: (NotificationResponse details) {
+          debugPrint('Notification tapped: ${details.payload}');
+        }
+      );
+    } catch (e, st) {
+      debugPrint('Notification init failed: $e\n$st');
+    }
   }
 
   // Daily Meds
@@ -91,8 +110,8 @@ class ReminderService {
 		await cancelLabReminder();	// avoid duplicates
 
     final triggers = [
-      latestEntryDate.add(const Duration(days: 90)),
-      latestEntryDate.add(const Duration(days: 180)),
+      latestEntryDate.add(const Duration(seconds: 90)), // DEBUG //
+      latestEntryDate.add(const Duration(seconds: 180)), // DEBUG //
     ];
 
     for (int i = 0; i < triggers.length; i++) {

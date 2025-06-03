@@ -42,6 +42,12 @@ class _SettingScreenState extends State<SettingScreen> {
   // Loading
   bool _loading = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadPreference(); // load preferences
+  }
+
   // Load preferences from shared_preferences.
   Future<void> _loadPreference() async {
     try {
@@ -50,7 +56,7 @@ class _SettingScreenState extends State<SettingScreen> {
       final sound = prefs.getBool(_kSoundKey) ?? false;
       final autosync = prefs.getBool(_kAutoSyncKey) ?? false;
       final language = prefs.getString(_kLanguageKey) ?? 'fa';
-
+      debugPrint('Error Loading');
       if (!mounted) return;
       setState(() {
         _reminderEnabled = reminders;
