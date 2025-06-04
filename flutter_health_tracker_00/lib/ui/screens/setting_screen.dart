@@ -98,212 +98,238 @@ class _SettingScreenState extends State<SettingScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final langLoc = AppLocalizations.of(context)!;
 
     // Loading
     if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator(),),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     var listView = ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                Text(
-                  langLoc.setProfile,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                // Profile
-                ListTile(
-                  leading: const Icon(Icons.person),
-                  title: Text(langLoc.setEditProfile),
-                  onTap:  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const PatientFormScreen()),
-                    );
-                  }
-                ),
-                // Reminder and Sounds
-                Text(
-                  langLoc.setRemindSound,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 8),
-                // REMINDER
-                SwitchListTile(
-                  title: Text(langLoc.setReminder),
-                  secondary: Icon(Icons.notifications),
-                  inactiveTrackColor: Colors.grey,
-                  value: _reminderEnabled,
-                  onChanged: (val) async {
-                    if (val) {
-                      // Check permissions when enabling
-                      final service = ReminderService.instance;
-                      final hasPermission = await service.androidPermission?.requestNotificationsPermission() ?? false;
-                      final hasExactAlarms = await service.androidPermission?.requestExactAlarmsPermission() ?? false;
-                      if (!hasPermission || !hasExactAlarms) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(!hasPermission
-                              ? 'Notification permission denied'
-                              : 'Exact alarm permission denied'),
-                            action: SnackBarAction(
-                              label: 'Settings',
-                              onPressed: () {
-                                // Open app settings
-                                service.androidPermission?.requestNotificationsPermission();
-                              },
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-                    }
-                    setState(() {
-                      _reminderEnabled = val;
-                    });
-                     await _saveBoolPreference(_kReminderKey, val);
-                    if (val) {
-                      ReminderService.instance.scheduleMedReminders();
-                    } else {
-                      ReminderService.instance.cancelMedReminder();
-                      ReminderService.instance.cancelLabReminder();
-                    }
-                  }
-                ),
-                // NOTIF SOUND ///////////////////////////////////////// DELETE THIS!
-                SwitchListTile(
-                  title: Text(langLoc.setNotifSound),
-                  secondary: Icon(Icons.notifications_active),
-                  inactiveTrackColor: Colors.grey,
-                  value: _soundEnabled,
-                  onChanged: (val) {
-                    setState(() {
-                      _soundEnabled = val;
-                    });
-                    _saveBoolPreference(_kSoundKey, val);
-                  }
-                ),
-                const Divider(),
-                Text(
-                  langLoc.setLangSync,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 8),
-                ListTile(
-                  leading: const Icon(Icons.language),
-                  title: Text(langLoc.setAppLang),
-                  trailing: DropdownButton<String>(
-                    value: _appLanguage,
-                    items: [
-                      DropdownMenuItem(value: 'fa', child: Text('Persian')),
-                      DropdownMenuItem(value: 'en', child: Text('English'))
-                    ],
-                    onChanged: (val) {
-                      if (val == null) return;
-                      setState(() {
-                        _appLanguage = val;
-                      });
-                      _saveStringPreference(_kLanguageKey, val);
-                    }
+      padding: const EdgeInsets.all(16),
+      children: [
+        Text(langLoc.setProfile, style: Theme.of(context).textTheme.bodyMedium),
+        // Profile
+        ListTile(
+          leading: const Icon(Icons.person),
+          title: Text(langLoc.setEditProfile),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const PatientFormScreen()),
+            );
+          },
+        ),
+        // Reminder and Sounds
+        Text(
+          langLoc.setRemindSound,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: 8),
+        // REMINDER ///////////////////////////////////////////// CHANGE THIS TO LAB REMINDER
+        SwitchListTile(
+          title: Text(langLoc.setReminder),
+          secondary: Icon(Icons.notifications),
+          inactiveTrackColor: Colors.grey,
+          value: _reminderEnabled,
+          onChanged: (val) async {
+            if (val) {
+              // Check permissions when enabling
+              final service = ReminderService.instance;
+              final hasPermission =
+                  await service.androidPermission
+                      ?.requestNotificationsPermission() ??
+                  false;
+              final hasExactAlarms =
+                  await service.androidPermission
+                      ?.requestExactAlarmsPermission() ??
+                  false;
+              if (!hasPermission || !hasExactAlarms) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      !hasPermission
+                          ? 'Notification permission denied'
+                          : 'Exact alarm permission denied',
+                    ),
+                    action: SnackBarAction(
+                      label: 'Settings',
+                      onPressed: () {
+                        // Open app settings
+                        service.androidPermission
+                            ?.requestNotificationsPermission();
+                      },
+                    ),
+                  ),
+                );
+                return;
+              }
+            }
+            setState(() {
+              _reminderEnabled = val;
+            });
+            await _saveBoolPreference(_kReminderKey, val);
+            if (val) {
+              ReminderService.instance.scheduleMedReminders();
+            } else {
+              ReminderService.instance.cancelMedReminder();
+              ReminderService.instance.cancelLabReminder();
+            }
+          },
+        ),
+        // NOTIF SOUND ///////////////////////////////////////// CHANGE THIS TO MED REMINDER
+        SwitchListTile(
+          title: Text(langLoc.setNotifSound),
+          secondary: Icon(Icons.notifications_active),
+          inactiveTrackColor: Colors.grey,
+          value: _soundEnabled,
+          onChanged: (val) {
+            setState(() {
+              _soundEnabled = val;
+            });
+            _saveBoolPreference(_kSoundKey, val);
+          },
+        ),
+        const Divider(),
+        Text(
+          langLoc.setLangSync,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: 8),
+        ListTile(
+          leading: const Icon(Icons.language),
+          title: Text(langLoc.setAppLang),
+          trailing: DropdownButton<String>(
+            value: _appLanguage,
+            items: [
+              DropdownMenuItem(value: 'fa', child: Text('Persian')),
+              DropdownMenuItem(value: 'en', child: Text('English')),
+            ],
+            onChanged: (val) {
+              if (val == null) return;
+              setState(() {
+                _appLanguage = val;
+              });
+              _saveStringPreference(_kLanguageKey, val);
+            },
+          ),
+        ),
+        // SYNC
+        SwitchListTile(
+          title: Text(langLoc.setSync),
+          secondary: Icon(Icons.sync),
+          inactiveTrackColor: Colors.grey,
+          value: _syncEnabled,
+          onChanged: (val) {
+            setState(() {
+              _syncEnabled = val;
+            });
+            _saveBoolPreference(_kAutoSyncKey, val);
+          },
+        ),
+        // DEBUG //
+        Text('DEBUG REMINDER', style: Theme.of(context).textTheme.bodyLarge),
+        ListTile(
+          leading: const Icon(Icons.bug_report),
+          title: const Text('Test Lab Reminder'),
+          onTap: () async {
+            ReminderService.instance.scheduleNotification(
+              title: 'DEBUG NOTIFICATION',
+              body: 'THIS IS THE DEBUG TO SHOW NOTIFICATION',
+              hour: 9,
+              minute: 45,
+            );
+            final pendingNotifications =
+                await ReminderService.instance.getPendingNotifications();
+            debugPrint(pendingNotifications.toString());
+            try {
+              final service = ReminderService.instance;
+              // Check permissions first
+              final hasNotificationPermission =
+                  await service.androidPermission
+                      ?.requestNotificationsPermission() ??
+                  false;
+              if (!hasNotificationPermission) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('SS - Notification permission not granted!'),
+                  ),
+                );
+                return;
+              }
+
+              // Crucially, check for exact alarm permission
+              final hasExactAlarmsPermission =
+                  await service.androidPermission
+                      ?.requestExactAlarmsPermission() ??
+                  false;
+              debugPrint(
+                'SS - Exact Alarms Permission for Test: $hasExactAlarmsPermission',
+              ); // For debugging
+              if (!hasExactAlarmsPermission) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text(
+                      'SS - Exact alarm permission is required for this test.',
+                    ),
+                    action: SnackBarAction(
+                      // Guide user to settings
+                      label: 'Settings',
+                      onPressed: () {
+                        service.androidPermission
+                            ?.requestExactAlarmsPermission();
+                      },
+                    ),
+                  ),
+                );
+                return;
+              }
+
+              // Schedule test notification
+              final testTime = DateTime.now().add(const Duration(seconds: 10));
+              await service.scheduleLabReminders('HbA1c', testTime);
+
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'SS - Lab Reminder Scheduled for 10 seconds from now.',
                   ),
                 ),
-                // SYNC
-                SwitchListTile(
-                  title: Text(langLoc.setSync),
-                  secondary: Icon(Icons.sync),
-                  inactiveTrackColor: Colors.grey,
-                  value: _syncEnabled,
-                  onChanged: (val) {
-                    setState(() {
-                      _syncEnabled = val;
-                    });
-                    _saveBoolPreference(_kAutoSyncKey, val);
-                  }
-                ),
-                // DEBUG //
-                Text(
-                  'DEBUG REMINDER',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.bug_report),
-                  title: const Text('Test Lab Reminder'),
-                  onTap: () async {
-                    try {
-                      final service = ReminderService.instance;
-                      // Check permissions first
-                      final hasNotificationPermission = await service.androidPermission?.requestNotificationsPermission() ?? false;
-                      if (!hasNotificationPermission) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('SS - Notification permission not granted!')),
-                        );
-                        return;
-                      }
-
-                      // Crucially, check for exact alarm permission
-                      final hasExactAlarmsPermission = await service.androidPermission?.requestExactAlarmsPermission() ?? false;
-                      debugPrint('SS - Exact Alarms Permission for Test: $hasExactAlarmsPermission'); // For debugging
-                      if (!hasExactAlarmsPermission) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('SS - Exact alarm permission is required for this test.'),
-                            action: SnackBarAction( // Guide user to settings
-                              label: 'Settings',
-                              onPressed: () {
-                                service.androidPermission?.requestExactAlarmsPermission();
-                              },
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-
-                      // Schedule test notification
-                      final testTime = DateTime.now().add(const Duration(seconds: 10));
-                      await service.scheduleLabReminders('HbA1c', testTime);
-
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('SS - Lab Reminder Scheduled for 10 seconds from now.'),
-                        ),
-                      );
-                    } catch (e, st) { // Added stack trace for better debugging
-                      debugPrint('SS - Error in Test Lab Reminder: $e\n$st');
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('SS - Error: $e')),
-                      );
-                    }
-                  },
-                ),
-                const Divider(),
-                // Logout
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: Text(langLoc.setLogout),
-                  onTap:  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
-                    );
-                  }
-                ),
-              ],
+              );
+            } catch (e, st) {
+              // Added stack trace for better debugging
+              debugPrint('SS - Error in Test Lab Reminder: $e\n$st');
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('SS - Error: $e')));
+            }
+          },
+        ),
+        const Divider(),
+        // Logout
+        ListTile(
+          leading: const Icon(Icons.logout),
+          title: Text(langLoc.setLogout),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
             );
+          },
+        ),
+      ],
+    );
     return Scaffold(
       body: Stack(
         children: [
           Positioned.fill(
-            child: CustomPaint(painter: GradientBackground(context),),
+            child: CustomPaint(painter: GradientBackground(context)),
           ),
           SafeArea(
             child: Column(
@@ -314,7 +340,9 @@ class _SettingScreenState extends State<SettingScreen> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios), // Change this for consistency
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                      ), // Change this for consistency
                       tooltip: '', // Make tooltip in ARB files
                       onPressed: () => Navigator.pop(context),
                     ),
@@ -326,9 +354,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 const SizedBox(height: 16),
-                Expanded(
-                  child: listView
-                ),
+                Expanded(child: listView),
               ],
             ),
           ),
