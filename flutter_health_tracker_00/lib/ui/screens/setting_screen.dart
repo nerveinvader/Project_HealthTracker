@@ -270,6 +270,7 @@ class _SettingScreenState extends State<SettingScreen> {
         //       ScaffoldMessenger.of(
         //         context,
         //       ).showSnackBar(SnackBar(content: Text('Setting - Error: $e')));
+        //        //! Use behavior: SnackBarBehavior.floating to float the SB
         //     }
         //   },
         // ),
