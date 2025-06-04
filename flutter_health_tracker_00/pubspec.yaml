@@ -95,6 +95,8 @@ flutter:
 
   assets:
     - .env
+    - asset/icon/
+    - asset/icon/app_icon_universal.png
 
 flutter_launcher_icons:
   android: "ic_launcher"

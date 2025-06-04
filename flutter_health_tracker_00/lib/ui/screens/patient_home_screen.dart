@@ -113,19 +113,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
             child: CustomPaint(painter: GradientBackground(context),),
           ),
           // Logo in Background
-          Positioned.fill(
-            child: IgnorePointer( // To ignore tap
-              child: Center(child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Opacity(
-                  opacity: 0.1,
-                  child: Image.asset(
-                    '', width: 200, height: 200, fit: BoxFit.contain,
-                  ),
-                ),
-              ),),
-            ),
-          ),
+          // const LogoBackground(), // Maybe later
           // Safe Area for Interactions
           SafeArea(
             child: Column(
@@ -134,14 +122,22 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Back button - To Home Page
+                      // Button to be used ?
                       // IconButton(
                       //  icon: const Icon(Icons.arrow_back_ios),
                       //  onPressed: () => Navigator.pop(context),
                       //),
                       // Reminder button
+                      Center(
+                        child: Image.asset(
+                          'asset/icon/app_icon_universal.png',
+                          width: 32,
+                          height: 32,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                       IconButton(
                         icon: const Icon(Icons.notifications_active_outlined),
                         onPressed: () {},

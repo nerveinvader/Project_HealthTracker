@@ -2,6 +2,8 @@
 // Code
 // Text Style, Colors,...
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 // Gradient Coloring in the Background
@@ -32,4 +34,29 @@ class GradientBackground extends CustomPainter {
 }
 
 // Logo Blurred in the Background
-class LogoBackground {}
+class LogoBackground extends StatelessWidget {
+  final double sigma;
+  final double opaq;
+  final double size;
+  const LogoBackground({super.key, this.sigma = 10, this.opaq = 0.2, this.size = 30});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: ImageFiltered(
+        imageFilter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+        child: Opacity(
+          opacity: opaq,
+          child: SizedBox(
+            height: size,
+            width: size,
+            child: Image.asset(
+              'asset/icon/app_icon_universal.png',
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
