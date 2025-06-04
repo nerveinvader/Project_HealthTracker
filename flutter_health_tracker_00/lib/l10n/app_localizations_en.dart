@@ -240,10 +240,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setRemindSound => 'Reminder & Sound';
 
   @override
-  String get setReminder => 'Enable Reminders';
+  String get setLabReminder => 'Enable Labs Reminders';
 
   @override
-  String get setNotifSound => 'Enable Sound';
+  String get setMedReminder => 'Enable Medication Reminder';
 
   @override
   String get setLangSync => 'Language & Sync';

@@ -557,17 +557,17 @@ abstract class AppLocalizations {
   /// **'Reminder & Sound'**
   String get setRemindSound;
 
-  /// No description provided for @setReminder.
+  /// No description provided for @setLabReminder.
   ///
   /// In en, this message translates to:
-  /// **'Enable Reminders'**
-  String get setReminder;
+  /// **'Enable Labs Reminders'**
+  String get setLabReminder;
 
-  /// No description provided for @setNotifSound.
+  /// No description provided for @setMedReminder.
   ///
   /// In en, this message translates to:
-  /// **'Enable Sound'**
-  String get setNotifSound;
+  /// **'Enable Medication Reminder'**
+  String get setMedReminder;
 
   /// No description provided for @setLangSync.
   ///

@@ -19,7 +19,8 @@ class ReminderService {
 
   ReminderService._internal();
   static final ReminderService instance = ReminderService._internal();
-  final FlutterLocalNotificationsPlugin _flnp = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _flnp =
+      FlutterLocalNotificationsPlugin();
   // Permission for Notifications
   AndroidFlutterLocalNotificationsPlugin? get androidPermission =>
       _flnp
@@ -160,39 +161,25 @@ class ReminderService {
   // Monthly Labs
   Future<void> scheduleLabReminders(
     String labType,
-    DateTime latestEntryDate,
   ) async {
     if (!_labBaseIds.containsKey(labType)) return; // Unknown type
     final base = _labBaseIds[labType]!; // type id num
 
     await cancelLabReminderFor(labType); // avoid duplicates
 
-    final triggers = [
-      latestEntryDate.add(const Duration(seconds: 10)), // DEBUG //
-      latestEntryDate.add(const Duration(seconds: 180)), // DEBUG //
-    ];
+    // to repeat the For loop - watch for sec/min/hr/day
+    var timeTriggers = [10, 180];
 
-    for (int i = 0; i < triggers.length; i++) {
-      //final id = _labIds[i];
-      final trigger = triggers[i];
-      final tzTrigger = tz.TZDateTime.from(trigger, tz.local);
-      // DEBUG
-      // debugPrint('------- RS - Reminder #${i + 1} -------');
-      // debugPrint('RS - Trigger time: ${tzTrigger.toString()}');
-      // debugPrint('RS - Current time: ${tz.TZDateTime.now(tz.local).toString()}');
-      // debugPrint('RS - Notification ID: ${base + i}');
-
-      if (tzTrigger.isBefore(tz.TZDateTime.now(tz.local))) {
-        debugPrint('RS - Target time is in past, skipping...');
-        continue;
-      }
+    for (int i = 0; i < timeTriggers.length; i++) {
+      int trigger = timeTriggers[i];
+      final timeNow = tz.TZDateTime.now(tz.local); // Time Now
+      final scheduleTrigger = timeNow.add(Duration(seconds: trigger)); // DEBUG SECONDS
       try {
-        debugPrint('RS - Attempting to schedule...');
         await _flnp.zonedSchedule(
           base + i,
-          'زمان انجام آزمایش بعدی شما فرا رسیده است', // specific labtype
-          labType,
-          tzTrigger,
+          'زمان انجام آزمایش بعدی شما فرا رسیده است', // title - generic
+          labType, // body - labtype
+          scheduleTrigger,
           const NotificationDetails(
             android: AndroidNotificationDetails(
               'lab_channel', // Ensure this matches the channel ID
@@ -202,23 +189,15 @@ class ReminderService {
                   Importance.high, // Importance for this specific notification
               enableVibration: true,
               playSound: true,
-              ticker: 'RS - Lab reminder DEBUG',
-              category: AndroidNotificationCategory.alarm,
             ),
             iOS: DarwinNotificationDetails(),
           ),
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          // Add a payload to identify the notification
-          payload:
-              'RS - lab_reminder_$labType _${DateTime.now().toIso8601String()}',
         );
       } catch (e, st) {
-        debugPrint('RS - Lab Scheduling Failed: $e\n$st');
+        debugPrint('ReminderService - Scheduling Failed: $e\n$st');
       }
     }
-    debugPrint(
-      'RS – Pending ▶︎ ${(await _flnp.pendingNotificationRequests()).map((e) => e.id).join(',')}',
-    );
   }
 
   // Cancel all lab reminders
@@ -240,96 +219,99 @@ class ReminderService {
     await _flnp.cancel(base + 1);
   }
 
+  ///////////////////////////
+  ////////// DEBUG //////////
+  ///////////////////////////
+
   // Show Notification // THIS DOES WORK
-  Future<void> showNotification({
-    int id = 0,
-    String? title,
-    String? body,
-  }) async {
-    debugPrint('DEBUG - SHOW NOTIFICATION');
-    return _flnp.show(
-      id,
-      title,
-      body,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'lab_channel', // Ensure this matches the channel ID
-          'Lab Test Reminders', // Channel name
-          channelDescription: 'Follow-up Lab Reminders',
-          importance:
-              Importance.high, // Importance for this specific notification
-          enableVibration: true,
-          playSound: true,
-          ticker: 'RS - Lab reminder DEBUG',
-          category: AndroidNotificationCategory.alarm,
-        ),
-        iOS: DarwinNotificationDetails(),
-      ),
-    );
-  }
+  // Future<void> showNotification({
+  //   int id = 0,
+  //   String? title,
+  //   String? body,
+  // }) async {
+  //   debugPrint('DEBUG - SHOW NOTIFICATION');
+  //   return _flnp.show(
+  //     id,
+  //     title,
+  //     body,
+  //     const NotificationDetails(
+  //       android: AndroidNotificationDetails(
+  //         'lab_channel', // Ensure this matches the channel ID
+  //         'Lab Test Reminders', // Channel name
+  //         channelDescription: 'Follow-up Lab Reminders',
+  //         importance:
+  //             Importance.high, // Importance for this specific notification
+  //         enableVibration: true,
+  //         playSound: true,
+  //         ticker: 'RS - Lab reminder DEBUG',
+  //         category: AndroidNotificationCategory.alarm,
+  //       ),
+  //       iOS: DarwinNotificationDetails(),
+  //     ),
+  //   );
+  // }
 
   // Shcedule Notification
-  Future<void> scheduleNotification({
-    int id = 1,
-    required String title,
-    required String body,
-    required int hour,
-    required int minute,
-  }) async {
-    final nowTime = tz.TZDateTime.now(tz.local); // Get current Date/Time
-    var scheduledDate = tz.TZDateTime(
-      tz.local,
-      nowTime.year,
-      nowTime.month,
-      nowTime.day,
-      hour,
-      minute,
-    );
+  // Future<void> scheduleNotification({
+  //   int id = 1,
+  //   required String title,
+  //   required String body,
+  //   required int hour,
+  //   required int minute,
+  // }) async {
+  //   final nowTime = tz.TZDateTime.now(tz.local); // Get current Date/Time
+  //   var scheduledDate = tz.TZDateTime(
+  //     tz.local,
+  //     nowTime.year,
+  //     nowTime.month,
+  //     nowTime.day,
+  //     hour,
+  //     minute,
+  //   );
 
-    // Schedule the Notification
-    await _flnp.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduledDate,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'lab_channel', // Ensure this matches the channel ID
-          'Lab Test Reminders', // Channel name
-          channelDescription: 'Follow-up Lab Reminders',
-          importance:
-              Importance.high, // Importance for this specific notification
-          enableVibration: true,
-          playSound: true,
-          ticker: 'RS - Lab reminder DEBUG',
-          category: AndroidNotificationCategory.alarm,
-        ),
-        iOS: DarwinNotificationDetails(),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      // matchDateTimeComponents: DateTimeComponents.time // repeat each day at this time
-    );
-    debugPrint('');
-  }
+  //   // Schedule the Notification
+  //   await _flnp.zonedSchedule(
+  //     id,
+  //     title,
+  //     body,
+  //     scheduledDate,
+  //     const NotificationDetails(
+  //       android: AndroidNotificationDetails(
+  //         'lab_channel', // Ensure this matches the channel ID
+  //         'Lab Test Reminders', // Channel name
+  //         channelDescription: 'Follow-up Lab Reminders',
+  //         importance:
+  //             Importance.high, // Importance for this specific notification
+  //         enableVibration: true,
+  //         playSound: true,
+  //         ticker: 'RS - Lab reminder DEBUG',
+  //         category: AndroidNotificationCategory.alarm,
+  //       ),
+  //       iOS: DarwinNotificationDetails(),
+  //     ),
+  //     androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+  //     // matchDateTimeComponents: DateTimeComponents.time // repeat each day at this time
+  //   );
+  //   debugPrint('');
+  // }
 
-  // Get pending notifications
-  Future<List<PendingNotificationRequest>> getPendingNotifications() async {
-    try {
-      final pendingNotifications = await _flnp.pendingNotificationRequests();
-      debugPrint('RS - Pending notifications count: ${pendingNotifications.length}');
-      for (var notification in pendingNotifications) {
-        debugPrint('''
-          RS - Notification ID: ${notification.id}
-          Title: ${notification.title}
-          Body: ${notification.body}
-          Payload: ${notification.payload}
-        ''');
-      }
-      return pendingNotifications;
-    } catch (e, st) {
-      debugPrint('RS - Failed to get pending notifications: $e\n$st');
-      return [];
-    }
-  }
-
+  // // Get pending notifications
+  // Future<List<PendingNotificationRequest>> getPendingNotifications() async {
+  //   try {
+  //     final pendingNotifications = await _flnp.pendingNotificationRequests();
+  //     debugPrint('RS - Pending notifications count: ${pendingNotifications.length}');
+  //     for (var notification in pendingNotifications) {
+  //       debugPrint('''
+  //         RS - Notification ID: ${notification.id}
+  //         Title: ${notification.title}
+  //         Body: ${notification.body}
+  //         Payload: ${notification.payload}
+  //       ''');
+  //     }
+  //     return pendingNotifications;
+  //   } catch (e, st) {
+  //     debugPrint('RS - Failed to get pending notifications: $e\n$st');
+  //     return [];
+  //   }
+  // }
 }

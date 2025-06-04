@@ -90,7 +90,7 @@ class _LabEntryFormScreenState extends State<LabEntryFormScreen> {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('_reminderEnabled') ?? false) {
       await ReminderService.instance
-        .scheduleLabReminders(_type, _date);
+        .scheduleLabReminders(_type,);
     }
     if (!navContext.mounted) return;
     Navigator.pop(navContext);

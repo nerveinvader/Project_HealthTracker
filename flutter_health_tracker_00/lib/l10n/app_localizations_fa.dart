@@ -240,10 +240,10 @@ class AppLocalizationsFa extends AppLocalizations {
   String get setRemindSound => 'یادآور و اعلان';
 
   @override
-  String get setReminder => 'اعلان/یادآور';
+  String get setLabReminder => 'یادآور آزمایشات';
 
   @override
-  String get setNotifSound => 'صدا اعلان/یادآور';
+  String get setMedReminder => 'یادآور داروها';
 
   @override
   String get setLangSync => 'زبان و همگام سازی';
