@@ -23,3 +23,14 @@ String persianizeNumber(String input) {
   }
   return input;
 }
+
+//* New Functions for Future
+// FittedBox() to fit the text on the screen
+// Wrap() to wrap elements
+// SnackBarBehavior.floating for floating snackbar (visualy better)
+// LayoutBuilder() for bigger screens
+// LongPressDraggable() well, drag anything anywhere
+// SelectableText() the text can be selected
+// ShaderMask() for gradient text
+// ListView for Lazyloading the widgets (instead of SignleChildScrollView)
+// .adaptive for Android iOS adaptation of the widgets
