@@ -18,7 +18,9 @@ class GradientBackground extends CustomPainter {
       colors: [
         Colors.white,
         Colors.white,
-        Theme.of(context).colorScheme.primary.withValues(alpha: 0.1), // Replace with your theme color
+        Theme.of(context).colorScheme.primary.withValues(
+          alpha: 0.1,
+        ), // Replace with your theme color
       ],
     );
     final paint = Paint()..shader = gradient.createShader(rect);
@@ -28,3 +30,6 @@ class GradientBackground extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
+// Logo Blurred in the Background
+class LogoBackground {}

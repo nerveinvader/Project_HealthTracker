@@ -539,6 +539,12 @@ abstract class AppLocalizations {
   /// **'Hyperlipidemia'**
   String get uiHLP;
 
+  /// No description provided for @setName.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get setName;
+
   /// No description provided for @setProfile.
   ///
   /// In en, this message translates to:

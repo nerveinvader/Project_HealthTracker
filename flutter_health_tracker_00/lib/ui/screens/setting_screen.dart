@@ -10,8 +10,6 @@
 // App Language
 // Sync (online or offline)
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
@@ -141,6 +139,7 @@ class _SettingScreenState extends State<SettingScreen> {
     if (_loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+    ///// Variable Setting ListView
     var listView = ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -246,34 +245,34 @@ class _SettingScreenState extends State<SettingScreen> {
         ///////////
         // DEBUG //
         ///////////
-        ListTile(
-          leading: const Icon(Icons.bug_report),
-          title: const Text('Test Lab Reminder'),
-          onTap: () async {
-            _checkNotificationPermissions(context);
-            try {
-              // Schedule test notification
-              final service = ReminderService.instance;
-              await service.scheduleLabReminders('HbA1c');
+        // ListTile(
+        //   leading: const Icon(Icons.bug_report),
+        //   title: const Text('Test Lab Reminder'),
+        //   onTap: () async {
+        //     _checkNotificationPermissions(context);
+        //     try {
+        //       // Schedule test notification
+        //       final service = ReminderService.instance;
+        //       await service.scheduleLabReminders('HbA1c');
 
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Lab Reminder Scheduled for 10 seconds from now.',
-                  ),
-                ),
-              );
-            } catch (e, st) {
-              // Added stack trace for better debugging
-              debugPrint('Setting - Error in Test Lab Reminder: $e\n$st');
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('Setting - Error: $e')));
-            }
-          },
-        ),
+        //       if (!context.mounted) return;
+        //       ScaffoldMessenger.of(context).showSnackBar(
+        //         const SnackBar(
+        //           content: Text(
+        //             'Lab Reminder Scheduled for 10 seconds from now.',
+        //           ),
+        //         ),
+        //       );
+        //     } catch (e, st) {
+        //       // Added stack trace for better debugging
+        //       debugPrint('Setting - Error in Test Lab Reminder: $e\n$st');
+        //       if (!context.mounted) return;
+        //       ScaffoldMessenger.of(
+        //         context,
+        //       ).showSnackBar(SnackBar(content: Text('Setting - Error: $e')));
+        //     }
+        //   },
+        // ),
         const Divider(),
         // Logout
         ListTile(
@@ -288,6 +287,8 @@ class _SettingScreenState extends State<SettingScreen> {
         ),
       ],
     );
+    ///// End of Variable Setting ListView
+    ///// Main Body Scaffold
     return Scaffold(
       body: Stack(
         children: [
@@ -313,7 +314,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 const SizedBox(height: 64.0),
                 Text(
-                  AppLocalizations.of(context)!.setEditProfile,
+                  AppLocalizations.of(context)!.setName,
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 const SizedBox(height: 16),

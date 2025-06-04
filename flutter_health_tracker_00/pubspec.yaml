@@ -59,6 +59,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_gen: ^5.10.0
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -94,6 +95,12 @@ flutter:
 
   assets:
     - .env
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "asset/icon/app_icon_universal.png"
+  min_sdk_android: 21
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -231,6 +231,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get uiHLP => 'چربی خون';
 
   @override
+  String get setName => 'تنظیمات';
+
+  @override
   String get setProfile => 'تنظیمات پروفایل';
 
   @override

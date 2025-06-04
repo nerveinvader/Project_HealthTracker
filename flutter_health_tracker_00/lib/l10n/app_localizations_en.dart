@@ -231,6 +231,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get uiHLP => 'Hyperlipidemia';
 
   @override
+  String get setName => 'Settings';
+
+  @override
   String get setProfile => 'Profile Setting';
 
   @override
