@@ -8,7 +8,6 @@
 // Bottombar > Add, Profile, Chart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_health_tracker_00/data/local/app_db.dart';
 import 'package:intl/intl.dart' as intl;
 import '../../l10n/app_localizations.dart';
 import '../../ui/fetch_lab.dart';
@@ -48,27 +47,34 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
     _latestCholesterol = ('--', '');
     _latestFBS = ('--', '');
     // LOAD STAT LATER FROM DB HERE
-    _loadLatestLab();
+    _loadLab();
   }
 
-  // Fetch series of labs
-  Future<void> _loadLatestLab() async {
-    await Future.wait([
-      _loadLab(_latestSBP, 'SBP'),
-      _loadLab(_latestDBP, 'DBP'),
-      _loadLab(_latestFBS, 'FBS'),
-      _loadLab(_latestCholesterol, 'Cholesterol'),
-    ]);
-  }
-
-  // Fetch latest lab type value and date
-  Future<void> _loadLab(Record variable, String type) async {
-    final entry = await fetchLatestLab(widget.patientId, type);
+  // Fetch latest labs
+  Future<void> _loadLab() async {
     if (!mounted) return;
+    final futureLabs = await Future.wait([
+      fetchLatestLab(widget.patientId, 'SBP'),
+      fetchLatestLab(widget.patientId, 'DBP'),
+      fetchLatestLab(widget.patientId, 'FBS'),
+      fetchLatestLab(widget.patientId, 'Cholesterol')
+    ]);
     setState(() {
-      variable = (
-        entry?.value.toStringAsFixed(1) ?? '--',
-        entry != null ? intl.DateFormat.Md('fa').format(entry.date) : '',
+      _latestSBP = (
+      futureLabs[0]?.value.toStringAsFixed(1) ?? '--',
+      futureLabs[0] != null ? intl.DateFormat.Md('fa').format(futureLabs[0]!.date) : ''
+    );
+      _latestDBP = (
+        futureLabs[1]?.value.toStringAsFixed(1) ?? '--',
+        futureLabs[1] != null ? intl.DateFormat.Md('fa').format(futureLabs[1]!.date) : ''
+      );
+      _latestFBS = (
+        futureLabs[2]?.value.toStringAsFixed(1) ?? '--',
+        futureLabs[2] != null ? intl.DateFormat.Md('fa').format(futureLabs[2]!.date) : ''
+      );
+      _latestCholesterol = (
+        futureLabs[3]?.value.toStringAsFixed(1) ?? '--',
+        futureLabs[3] != null ? intl.DateFormat.Md('fa').format(futureLabs[3]!.date) : ''
       );
     });
   }
@@ -154,7 +160,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
           // Safe Area for Interactions
           SafeArea(
             child: RefreshIndicator(
-              onRefresh: _loadLatestLab,
+              onRefresh: _loadLab,
               child: Column(
                 children: [
                   // Top bar with placeholder and back button

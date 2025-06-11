@@ -70,7 +70,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final p = widget.patient;
+    // final p = widget.patient;
     //final formattedDate = Jalali.fromDateTime(p.dateOfBirth); // Jalali format
     return Scaffold(
       appBar: AppBar(
