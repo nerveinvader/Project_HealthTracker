@@ -7,7 +7,6 @@
 // Body > ProgressionCard, DiseaseCards, LearnCards
 // Bottombar > Add, Profile, Chart
 
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -16,6 +15,7 @@ import 'lab_entry_form_screen.dart'; // Lab entry
 import 'medication_form_screen.dart'; // Medication Entry
 import 'disease_dashboard_screen.dart'; // Disease Specific Dashboard
 import 'setting_screen.dart'; // Settings
+import 'contact_screen.dart'; // Contact Us
 
 import '../theme/theme_related.dart'; // Theme
 import '../widgets/cards.dart'; // Reusable Cards
@@ -129,15 +129,15 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                       //  icon: const Icon(Icons.arrow_back_ios),
                       //  onPressed: () => Navigator.pop(context),
                       //),
-                      // Reminder button
                       Center(
                         child: Image.asset(
-                          'asset/icon/app_icon_universal.png',
+                          'assets/icons/app_icon_universal.png',
                           width: 32,
                           height: 32,
                           fit: BoxFit.contain,
                         ),
                       ),
+                      // Reminder button
                       IconButton(
                         icon: const Icon(Icons.notifications_active_outlined),
                         onPressed: () {},
@@ -146,147 +146,149 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                   ),
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
+                  child: ListView(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Top Margin
-                        const SizedBox(height: 128.0),
-                        // Greetings
-                        Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: Text(
-                              langLoc.uiGreeting + patientName,
-                              style: Theme.of(context).textTheme.displaySmall!.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                        ),
-                        const SizedBox(height: 32.0),
-                        // Weekly Progress Card
-                        WeeklyProgressCard(
-                          rating: _progressPercent, // CHANGE THIS LATER FOR /10 RATING
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ChartViewScreen(patientId: widget.patientId), // CHANGE THIS LATER
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Top Margin
+                          const SizedBox(height: 128.0),
+                          // Greetings
+                          Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Text(
+                                langLoc.uiGreeting + patientName,
+                                style: Theme.of(context).textTheme.displaySmall!.copyWith(fontWeight: FontWeight.bold),
                               ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 64.0),
-                        ///////////////
-                        // DiseaseCards
-                        ///////////////
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'آخرین وضعیت اندازه گیری های شما',
-                              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 16.0),
-                            ///////////
-                            // HTN Card
-                            ///////////
-                            SizedBox(
-                              child: DiseaseCard(
-                                title: langLoc.uiLastBP,
-                                navPage: langLoc.uiHTN,
-                                value: _bloodPressure,
-                                onTap: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => DiseaseDashboardScreen(
-                                        type: DiseaseType.hypertension, patientId: widget.patientId),
-                                    ),
-                                  );
-                                  setState(() {
-                                    // reload if want
-                                  });
-                                },
+                          ),
+                          const SizedBox(height: 32.0),
+                          // Weekly Progress Card
+                          WeeklyProgressCard(
+                            rating: _progressPercent, // CHANGE THIS LATER FOR /10 RATING
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ChartViewScreen(patientId: widget.patientId), // CHANGE THIS LATER
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 64.0),
+                          ///////////////
+                          // DiseaseCards
+                          ///////////////
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'آخرین وضعیت اندازه گیری های شما',
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            const SizedBox(height: 8.0),
-                            ///////////
-                            // DM Card
-                            ///////////
-                            SizedBox(
-                              child: DiseaseCard(
-                                title: langLoc.uiLastFBS,
-                                navPage: langLoc.uiDM,
-                                value: _fbs,
-                                onTap: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => DiseaseDashboardScreen(
-                                        type: DiseaseType.diabetes, patientId: widget.patientId),
-                                    ),
-                                  );
-                                  setState(() {
-                                    // reload if want
-                                  });
-                                },
+                              const SizedBox(height: 16.0),
+                              ///////////
+                              // HTN Card
+                              ///////////
+                              SizedBox(
+                                child: DiseaseCard(
+                                  title: langLoc.uiLastBP,
+                                  navPage: langLoc.uiHTN,
+                                  value: _bloodPressure,
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => DiseaseDashboardScreen(
+                                          type: DiseaseType.hypertension, patientId: widget.patientId),
+                                      ),
+                                    );
+                                    setState(() {
+                                      // reload if want
+                                    });
+                                  },
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 8.0),
-                            ///////////
-                            // HLP Card
-                            ///////////
-                            SizedBox(
-                              child: DiseaseCard(
-                                title: langLoc.uiLastChol,
-                                navPage: langLoc.uiHLP,
-                                value: _cholesterol,
-                                onTap: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => DiseaseDashboardScreen(
-                                        type: DiseaseType.hyperlipidemia, patientId: widget.patientId),
-                                    ),
-                                  );
-                                  setState(() {
-                                    // reload if want
-                                  });
-                                },
+                              const SizedBox(height: 8.0),
+                              ///////////
+                              // DM Card
+                              ///////////
+                              SizedBox(
+                                child: DiseaseCard(
+                                  title: langLoc.uiLastFBS,
+                                  navPage: langLoc.uiDM,
+                                  value: _fbs,
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => DiseaseDashboardScreen(
+                                          type: DiseaseType.diabetes, patientId: widget.patientId),
+                                      ),
+                                    );
+                                    setState(() {
+                                      // reload if want
+                                    });
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 64.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'آخرین مطالب در مورد بیماری خود را بخوانید',
-                              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 16.0),
-                            // Learn HTN
-                            LearnMoreCard(
-                              text: langLoc.uiLearnHTN,
-                              onTap: () {},
-                            ),
-                            const SizedBox(height: 16.0),
-                            // Learn DM
-                            LearnMoreCard(
-                              text: langLoc.uiLearnDM,
-                              onTap: () {},
-                            ),
-                            const SizedBox(height: 16.0),
-                            // Learn HLP
-                            LearnMoreCard(
-                              text: langLoc.uiLearnHLP,
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              const SizedBox(height: 8.0),
+                              ///////////
+                              // HLP Card
+                              ///////////
+                              SizedBox(
+                                child: DiseaseCard(
+                                  title: langLoc.uiLastChol,
+                                  navPage: langLoc.uiHLP,
+                                  value: _cholesterol,
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => DiseaseDashboardScreen(
+                                          type: DiseaseType.hyperlipidemia, patientId: widget.patientId),
+                                      ),
+                                    );
+                                    setState(() {
+                                      // reload if want
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 64.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'آخرین مطالب در مورد بیماری خود را بخوانید',
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 16.0),
+                              // Learn HTN
+                              LearnMoreCard(
+                                text: langLoc.uiLearnHTN,
+                                onTap: () {},
+                              ),
+                              const SizedBox(height: 16.0),
+                              // Learn DM
+                              LearnMoreCard(
+                                text: langLoc.uiLearnDM,
+                                onTap: () {},
+                              ),
+                              const SizedBox(height: 16.0),
+                              // Learn HLP
+                              LearnMoreCard(
+                                text: langLoc.uiLearnHLP,
+                                onTap: () {},
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],

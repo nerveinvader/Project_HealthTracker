@@ -89,14 +89,14 @@ flutter:
   fonts:
     - family: Vazir
       fonts:
-        - asset: asset/font/Vazirmatn-Regular.ttf
-        - asset: asset/font/Vazirmatn-Bold.ttf
+        - asset: assets/fonts/Vazirmatn-Regular.ttf
+        - asset: assets/fonts/Vazirmatn-Bold.ttf
           weight: 700
 
   assets:
     - .env
-    - asset/icon/
-    - asset/icon/app_icon_universal.png
+    - assets/icons/
+    - assets/icons/app_icon_universal.png
 
 flutter_launcher_icons:
   android: "ic_launcher"
