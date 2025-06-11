@@ -599,6 +599,48 @@ abstract class AppLocalizations {
   /// **'Logout'**
   String get setLogout;
 
+  /// No description provided for @contName.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get contName;
+
+  /// No description provided for @contAppName.
+  ///
+  /// In en, this message translates to:
+  /// **'App Name'**
+  String get contAppName;
+
+  /// No description provided for @contAppDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'App Description'**
+  String get contAppDescription;
+
+  /// No description provided for @contPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Phone Number'**
+  String get contPhone;
+
+  /// No description provided for @contTelegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Telegram ID'**
+  String get contTelegram;
+
+  /// No description provided for @contEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Support EMail Address'**
+  String get contEmail;
+
+  /// No description provided for @contVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App Version'**
+  String get contVersion;
+
   /// No description provided for @other.
   ///
   /// In en, this message translates to:

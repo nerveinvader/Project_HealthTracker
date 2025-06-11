@@ -84,5 +84,12 @@
     "setAppLang": "Language",
     "setSync": "Sync",
     "setLogout": "Logout",
+    "contName": "Contact Us",
+    "contAppName": "App Name",
+    "contAppDescription": "App Description",
+    "contPhone": "Support Phone Number",
+    "contTelegram": "Support Telegram ID",
+    "contEmail": "Support EMail Address",
+    "contVersion": "App Version",
     "other": "Other"
 }

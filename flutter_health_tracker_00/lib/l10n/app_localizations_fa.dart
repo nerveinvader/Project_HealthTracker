@@ -261,5 +261,26 @@ class AppLocalizationsFa extends AppLocalizations {
   String get setLogout => 'خروج از پروفایل';
 
   @override
+  String get contName => 'ارتباط با ما';
+
+  @override
+  String get contAppName => 'اسم برنامه';
+
+  @override
+  String get contAppDescription => 'توضیحات برنامه';
+
+  @override
+  String get contPhone => 'تلفن پشتیبانی';
+
+  @override
+  String get contTelegram => 'آیدی تلگرام پشتیبانی';
+
+  @override
+  String get contEmail => 'ایمیل پشتیبانی';
+
+  @override
+  String get contVersion => 'نسخه برنامه';
+
+  @override
   String get other => 'دیگر';
 }

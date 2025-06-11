@@ -261,5 +261,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setLogout => 'Logout';
 
   @override
+  String get contName => 'Contact Us';
+
+  @override
+  String get contAppName => 'App Name';
+
+  @override
+  String get contAppDescription => 'App Description';
+
+  @override
+  String get contPhone => 'Support Phone Number';
+
+  @override
+  String get contTelegram => 'Support Telegram ID';
+
+  @override
+  String get contEmail => 'Support EMail Address';
+
+  @override
+  String get contVersion => 'App Version';
+
+  @override
   String get other => 'Other';
 }

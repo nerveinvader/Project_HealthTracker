@@ -84,5 +84,12 @@
     "setAppLang": "زبان برنامه",
     "setSync": "همگام سازی",
     "setLogout": "خروج از پروفایل",
+    "contName": "ارتباط با ما",
+    "contAppName": "اسم برنامه",
+    "contAppDescription": "توضیحات برنامه",
+    "contPhone": "تلفن پشتیبانی",
+    "contTelegram": "آیدی تلگرام پشتیبانی",
+    "contEmail": "ایمیل پشتیبانی",
+    "contVersion": "نسخه برنامه",
     "other": "دیگر"
 }
