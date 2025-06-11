@@ -12,6 +12,7 @@ import '../../l10n/app_localizations.dart';
 import 'package:flutter_health_tracker_00/ui/widgets/cards.dart';
 import 'package:intl/intl.dart';
 import '../../data/local/app_db.dart';
+
 import './chart_view_screen.dart'; // Chart View Dashboard
 import '../theme/theme_related.dart';
 

@@ -9,9 +9,11 @@ import 'dart:io';
 part 'app_db.g.dart'; // Generated code will be in app_db.g.dart
 
 class Patients extends Table {
-  TextColumn get id => text().clientDefault(() => const Uuid().v4())(); // Patient ID
+  TextColumn get id =>
+      text().clientDefault(() => const Uuid().v4())(); // Patient ID
   TextColumn get name => text().withLength(min: 1, max: 50)(); // Patient Name
-  TextColumn get location => text().withLength(min: 1, max: 100)(); // Patient Location
+  TextColumn get location =>
+      text().withLength(min: 1, max: 100)(); // Patient Location
   DateTimeColumn get dateOfBirth => dateTime()(); // Patient Date of Birth
   RealColumn get height => real()(); // Patient Height
   RealColumn get weight => real()(); // Patient Weight
@@ -21,8 +23,12 @@ class Patients extends Table {
 }
 
 class LabEntries extends Table {
-  TextColumn get id => text().clientDefault(() => const Uuid().v4())(); // Lab Entry ID
-  TextColumn get patientId => text().customConstraint('REFERENCES patients(id) NOT NULL')(); // Patient ID
+  TextColumn get id =>
+      text().clientDefault(() => const Uuid().v4())(); // Lab Entry ID
+  TextColumn get patientId =>
+      text().customConstraint(
+        'REFERENCES patients(id) NOT NULL',
+      )(); // Patient ID
   DateTimeColumn get date => dateTime()(); // Lab Entry Date
   TextColumn get type => text()(); // Labe Entry Type
   RealColumn get value => real()(); // Lab Entry Value
@@ -32,8 +38,12 @@ class LabEntries extends Table {
 }
 
 class MedicationEntries extends Table {
-  TextColumn get id => text().clientDefault(() => const Uuid().v4())(); // Meds Entry ID
-  TextColumn get patientId => text().customConstraint('REFERENCES patients(id) NOT NULL')(); // Patient ID
+  TextColumn get id =>
+      text().clientDefault(() => const Uuid().v4())(); // Meds Entry ID
+  TextColumn get patientId =>
+      text().customConstraint(
+        'REFERENCES patients(id) NOT NULL',
+      )(); // Patient ID
   TextColumn get name => text().withLength(min: 1, max: 60)(); // Meds Name
   RealColumn get dosage => real()(); // Meds Dosage in Mg
   TextColumn get frequency => text().nullable()(); // frequency
@@ -44,11 +54,13 @@ class MedicationEntries extends Table {
   Set<Column> get primaryKey => {id}; // Primary key
 }
 
-
 @DriftDatabase(tables: [Patients, LabEntries, MedicationEntries])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
-  @override int get schemaVersion => 2; // Increment this when you change your schema
+  AppDatabase._() : super(_openConnection());
+  static final AppDatabase _instance = AppDatabase._();
+  factory AppDatabase() => _instance;
+  @override
+  int get schemaVersion => 2; // Increment this when you change your schema
   // How to Upgrade
   @override
   MigrationStrategy get migration => MigrationStrategy(
