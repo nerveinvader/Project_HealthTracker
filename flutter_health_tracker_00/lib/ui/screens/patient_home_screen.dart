@@ -43,27 +43,28 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
 
   // Show Add Entry Option
   Future<void> _showAddOptions() async {
-    if (!mounted) return;  // Early return if widget is not mounted
+    if (!mounted) return; // Early return if widget is not mounted
 
     try {
       final choice = await showModalBottomSheet<String>(
         context: context,
-        builder: (BuildContext bottomSheetContext) => SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.biotech),
-                title: Text(AppLocalizations.of(context)!.addLabEntry),
-                onTap: () => Navigator.pop(bottomSheetContext, 'lab'),
+        builder:
+            (BuildContext bottomSheetContext) => SafeArea(
+              child: Wrap(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.biotech),
+                    title: Text(AppLocalizations.of(context)!.addLabEntry),
+                    onTap: () => Navigator.pop(bottomSheetContext, 'lab'),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.medication),
+                    title: Text(AppLocalizations.of(context)!.medAdd),
+                    onTap: () => Navigator.pop(bottomSheetContext, 'med'),
+                  ),
+                ],
               ),
-              ListTile(
-                leading: const Icon(Icons.medication),
-                title: Text(AppLocalizations.of(context)!.medAdd),
-                onTap: () => Navigator.pop(bottomSheetContext, 'med'),
-              ),
-            ],
-          ),
-        ),
+            ),
       );
 
       // Return early if the sheet was dismissed or widget is disposed
@@ -110,7 +111,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
         children: [
           // Background
           Positioned.fill(
-            child: CustomPaint(painter: GradientBackground(context),),
+            child: CustomPaint(painter: GradientBackground(context)),
           ),
           // Logo in Background
           // const LogoBackground(), // Maybe later
@@ -120,7 +121,10 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
               children: [
                 // Top bar with placeholder and back button
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -129,15 +133,17 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                       //  icon: const Icon(Icons.arrow_back_ios),
                       //  onPressed: () => Navigator.pop(context),
                       //),
-                      Center(
-                        child: Image.asset(
-                          'assets/icons/app_icon_universal.png',
-                          width: 32,
-                          height: 32,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
                       // Reminder button
+                      IconButton(
+                        icon: const Icon(Icons.info_outline),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ContactScreen()),
+                          );
+                        },
+                      ),
                       IconButton(
                         icon: const Icon(Icons.notifications_active_outlined),
                         onPressed: () {},
@@ -147,7 +153,10 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                 ),
                 Expanded(
                   child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,19 +167,24 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                           Directionality(
                             textDirection: TextDirection.rtl,
                             child: Text(
-                                langLoc.uiGreeting + patientName,
-                                style: Theme.of(context).textTheme.displaySmall!.copyWith(fontWeight: FontWeight.bold),
-                              ),
+                              langLoc.uiGreeting + patientName,
+                              style: Theme.of(context).textTheme.displaySmall!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
                           ),
                           const SizedBox(height: 32.0),
                           // Weekly Progress Card
                           WeeklyProgressCard(
-                            rating: _progressPercent, // CHANGE THIS LATER FOR /10 RATING
+                            rating:
+                                _progressPercent, // CHANGE THIS LATER FOR /10 RATING
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => ChartViewScreen(patientId: widget.patientId), // CHANGE THIS LATER
+                                  builder:
+                                      (_) => ChartViewScreen(
+                                        patientId: widget.patientId,
+                                      ), // CHANGE THIS LATER
                                 ),
                               );
                             },
@@ -185,7 +199,8 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                             children: [
                               Text(
                                 'آخرین وضعیت اندازه گیری های شما',
-                                style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                                style: Theme.of(context).textTheme.titleMedium!
+                                    .copyWith(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 16.0),
                               ///////////
@@ -200,8 +215,11 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => DiseaseDashboardScreen(
-                                          type: DiseaseType.hypertension, patientId: widget.patientId),
+                                        builder:
+                                            (_) => DiseaseDashboardScreen(
+                                              type: DiseaseType.hypertension,
+                                              patientId: widget.patientId,
+                                            ),
                                       ),
                                     );
                                     setState(() {
@@ -223,8 +241,11 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => DiseaseDashboardScreen(
-                                          type: DiseaseType.diabetes, patientId: widget.patientId),
+                                        builder:
+                                            (_) => DiseaseDashboardScreen(
+                                              type: DiseaseType.diabetes,
+                                              patientId: widget.patientId,
+                                            ),
                                       ),
                                     );
                                     setState(() {
@@ -246,8 +267,11 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => DiseaseDashboardScreen(
-                                          type: DiseaseType.hyperlipidemia, patientId: widget.patientId),
+                                        builder:
+                                            (_) => DiseaseDashboardScreen(
+                                              type: DiseaseType.hyperlipidemia,
+                                              patientId: widget.patientId,
+                                            ),
                                       ),
                                     );
                                     setState(() {
@@ -259,33 +283,34 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                             ],
                           ),
                           const SizedBox(height: 64.0),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'آخرین مطالب در مورد بیماری خود را بخوانید',
-                                style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 16.0),
-                              // Learn HTN
-                              LearnMoreCard(
-                                text: langLoc.uiLearnHTN,
-                                onTap: () {},
-                              ),
-                              const SizedBox(height: 16.0),
-                              // Learn DM
-                              LearnMoreCard(
-                                text: langLoc.uiLearnDM,
-                                onTap: () {},
-                              ),
-                              const SizedBox(height: 16.0),
-                              // Learn HLP
-                              LearnMoreCard(
-                                text: langLoc.uiLearnHLP,
-                                onTap: () {},
-                              ),
-                            ],
-                          ),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     Text(
+                          //       'آخرین مطالب در مورد بیماری خود را بخوانید',
+                          //       style: Theme.of(context).textTheme.titleMedium!
+                          //           .copyWith(fontWeight: FontWeight.bold),
+                          //     ),
+                          //     const SizedBox(height: 16.0),
+                          //     // Learn HTN
+                          //     LearnMoreCard(
+                          //       text: langLoc.uiLearnHTN,
+                          //       onTap: () {},
+                          //     ),
+                          //     const SizedBox(height: 16.0),
+                          //     // Learn DM
+                          //     LearnMoreCard(
+                          //       text: langLoc.uiLearnDM,
+                          //       onTap: () {},
+                          //     ),
+                          //     const SizedBox(height: 16.0),
+                          //     // Learn HLP
+                          //     LearnMoreCard(
+                          //       text: langLoc.uiLearnHLP,
+                          //       onTap: () {},
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ],
@@ -307,7 +332,10 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => ChartViewScreen(patientId: widget.patientId)),
+                  MaterialPageRoute(
+                    builder:
+                        (_) => ChartViewScreen(patientId: widget.patientId),
+                  ),
                 );
               },
             ),
@@ -315,7 +343,9 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.7),
               ),
               child: IconButton(
                 icon: Icon(Icons.add),
