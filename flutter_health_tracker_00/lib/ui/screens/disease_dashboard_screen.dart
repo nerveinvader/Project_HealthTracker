@@ -15,6 +15,7 @@ import '../../data/local/app_db.dart';
 
 import './chart_view_screen.dart'; // Chart View Dashboard
 import '../theme/theme_related.dart';
+import '../public_classes.dart';
 
 /// Enum to select disease type
 enum DiseaseType { hypertension, diabetes, hyperlipidemia }
@@ -56,12 +57,13 @@ class DiseaseDashboardScreen extends StatelessWidget {
   /// Fetch latest entry for lab type from DB
   Future<LabEntry?> _fetchLatest(BuildContext context, String labType) async {
     final db = AppDatabase();
-    final entries = await (db.select(db.labEntries)
-          ..where((t) => t.patientId.equals(patientId))
-          ..where((t) => t.type.equals(labType))
-          ..orderBy([(t) => OrderingTerm.desc(t.date)])
-          ..limit(1))
-        .get();
+    final entries =
+        await (db.select(db.labEntries)
+              ..where((t) => t.patientId.equals(patientId))
+              ..where((t) => t.type.equals(labType))
+              ..orderBy([(t) => OrderingTerm.desc(t.date)])
+              ..limit(1))
+            .get();
     return entries.isNotEmpty ? entries.first : null;
   }
 
@@ -76,20 +78,26 @@ class DiseaseDashboardScreen extends StatelessWidget {
         children: [
           // Background
           Positioned.fill(
-            child: CustomPaint(painter: GradientBackground(context),),
+            child: CustomPaint(painter: GradientBackground(context)),
           ),
           // Logo in Background
           Positioned.fill(
-            child: IgnorePointer( // To ignore tap
-              child: Center(child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Opacity(
-                  opacity: 0.1,
-                  child: Image.asset(
-                    '', width: 200, height: 200, fit: BoxFit.contain,
+            child: IgnorePointer(
+              // To ignore tap
+              child: Center(
+                child: ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Opacity(
+                    opacity: 0.1,
+                    child: Image.asset(
+                      '',
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
-              ),),
+              ),
             ),
           ),
           // Safe Area for Interactions
@@ -98,7 +106,10 @@ class DiseaseDashboardScreen extends StatelessWidget {
               children: [
                 // Top bar with placeholder and back button
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -145,25 +156,26 @@ class DiseaseDashboardScreen extends StatelessWidget {
                             future: _fetchLatest(context, lab),
                             builder: (ctx, snap) {
                               final entry = snap.data;
-                              final valueStr = entry != null
-                                  ? entry.value.toString()
-                                  : langLoc.errorLoadingdata;
-                              final dateStr = entry != null
-                                  ? DateFormat.yMd('fa').format(entry.date)
-                                  : '';
+                              final valueStr =
+                                  entry != null
+                                      ? entry.value.toString()
+                                      : langLoc.errorLoadingdata;
+                              final dateStr =
+                                  entry != null ? formatJalali(entry.date) : '';
                               return MeasurementCard(
                                 label: lab,
                                 value: valueStr,
                                 date: dateStr,
                                 onTap: () {
                                   Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChartViewScreen(
-                                    patientId: patientId,
-                                    patientLabType: lab,
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => ChartViewScreen(
+                                            patientId: patientId,
+                                            patientLabType: lab,
+                                          ),
                                     ),
-                                  ),
                                   );
                                 },
                               );
@@ -174,10 +186,7 @@ class DiseaseDashboardScreen extends StatelessWidget {
                         //////////////////////
                         // Learn more sections
                         //////////////////////
-                        LearnMoreCard(
-                          text: _learnText(langLoc),
-                          onTap: () {},
-                        ),
+                        LearnMoreCard(text: _learnText(langLoc), onTap: () {}),
                       ],
                     ),
                   ),
@@ -196,25 +205,35 @@ class DiseaseDashboardScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.show_chart),
               tooltip: langLoc.chartTitle,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChartViewScreen(patientId: patientId),
+                  ),
+                );
+              },
             ),
             // Add
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.7),
               ),
               child: IconButton(
                 icon: Icon(Icons.add),
                 tooltip: langLoc.uiAdd,
-                onPressed: () {}
+                onPressed: () {},
               ),
             ),
-            // Profile
+            // Edit entries
             IconButton(
-              icon: Icon(Icons.person),
-              tooltip: langLoc.uiProfile,
-              onPressed: () {},
+              icon: Icon(Icons.edit),
+              tooltip: langLoc.editLabEntry,
+              onPressed:
+                  () => ShowAddOptions.show(context, patientId: patientId),
             ),
           ],
         ),

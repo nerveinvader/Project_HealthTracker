@@ -8,19 +8,17 @@
 // Bottombar > Add, Profile, Chart
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' as intl;
 import '../../l10n/app_localizations.dart';
-import '../../ui/fetch_lab.dart';
 
 import 'chart_view_screen.dart'; // Chart View Dashboard
-import 'lab_entry_form_screen.dart'; // Lab entry
-import 'medication_form_screen.dart'; // Medication Entry
 import 'disease_dashboard_screen.dart'; // Disease Specific Dashboard
 import 'setting_screen.dart'; // Settings
 import 'contact_screen.dart'; // Contact Us
 
+import '../../ui/fetch_lab.dart';
 import '../theme/theme_related.dart'; // Theme
 import '../widgets/cards.dart'; // Reusable Cards
+import '../public_classes.dart'; // Public reusable classes
 
 class PatientHomeScreen extends StatefulWidget {
   final String patientId;
@@ -62,83 +60,25 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
     setState(() {
       _latestSBP = (
       futureLabs[0]?.value.toStringAsFixed(1) ?? '--',
-      futureLabs[0] != null ? intl.DateFormat.Md('fa').format(futureLabs[0]!.date) : ''
+      //futureLabs[0] != null ? intl.DateFormat.yMMMMd('fa').format(futureLabs[0]!.date) : ''
+	  futureLabs[0] != null ? formatJalali(futureLabs[0]!.date) : ''
     );
       _latestDBP = (
         futureLabs[1]?.value.toStringAsFixed(1) ?? '--',
-        futureLabs[1] != null ? intl.DateFormat.Md('fa').format(futureLabs[1]!.date) : ''
+        futureLabs[1] != null ? formatJalali(futureLabs[1]!.date) : ''
       );
       _latestFBS = (
         futureLabs[2]?.value.toStringAsFixed(1) ?? '--',
-        futureLabs[2] != null ? intl.DateFormat.Md('fa').format(futureLabs[2]!.date) : ''
+        futureLabs[2] != null ? formatJalali(futureLabs[2]!.date) : ''
       );
       _latestCholesterol = (
         futureLabs[3]?.value.toStringAsFixed(1) ?? '--',
-        futureLabs[3] != null ? intl.DateFormat.Md('fa').format(futureLabs[3]!.date) : ''
+        futureLabs[3] != null ? formatJalali(futureLabs[3]!.date) : ''
       );
     });
   }
 
-  // Show Add Entry Options
-  Future<void> _showAddOptions() async {
-    if (!mounted) return; // Early return if widget is not mounted
 
-    try {
-      final choice = await showModalBottomSheet<String>(
-        context: context,
-        builder:
-            (BuildContext bottomSheetContext) => SafeArea(
-              child: Wrap(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.biotech),
-                    title: Text(AppLocalizations.of(context)!.addLabEntry),
-                    onTap: () => Navigator.pop(bottomSheetContext, 'lab'),
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.medication),
-                    title: Text(AppLocalizations.of(context)!.medAdd),
-                    onTap: () => Navigator.pop(bottomSheetContext, 'med'),
-                  ),
-                ],
-              ),
-            ),
-      );
-
-      // Return early if the sheet was dismissed or widget is disposed
-      if (!mounted || choice == null) return;
-
-      // Navigate based on choice
-      switch (choice) {
-        case 'lab':
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => LabEntryFormScreen(patientId: widget.patientId),
-            ),
-          );
-          break;
-        case 'med':
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => MedicationFormScreen(patientId: widget.patientId),
-            ),
-          );
-          break;
-      }
-    } catch (e) {
-      if (!mounted) return;
-
-      // Show error dialog
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.errorPlaceholder),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -258,6 +198,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                                     title: langLoc.uiLastBP,
                                     navPage: langLoc.uiHTN,
                                     value: latestBP.$1,
+									labDate: latestBP.$2,
                                     onTap: () async {
                                       await Navigator.push(
                                         context,
@@ -284,6 +225,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                                     title: langLoc.uiLastFBS,
                                     navPage: langLoc.uiDM,
                                     value: _latestFBS.$1,
+									labDate: _latestFBS.$2,
                                     onTap: () async {
                                       await Navigator.push(
                                         context,
@@ -310,6 +252,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
                                     title: langLoc.uiLastChol,
                                     navPage: langLoc.uiHLP,
                                     value: _latestCholesterol.$1,
+									labDate: _latestCholesterol.$2,
                                     onTap: () async {
                                       await Navigator.push(
                                         context,
@@ -399,7 +342,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
               child: IconButton(
                 icon: Icon(Icons.add),
                 tooltip: langLoc.uiAdd,
-                onPressed: _showAddOptions,
+                onPressed: () => ShowAddOptions.show(context, patientId: widget.patientId),
               ),
             ),
             // Profile
@@ -419,5 +362,3 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
     );
   }
 }
-
-/* Private Classes */

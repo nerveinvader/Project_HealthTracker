@@ -5,15 +5,22 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 
-
 ////////////////////////
 // Disease Specific Card
 class DiseaseCard extends StatelessWidget {
   final String title;
   final String navPage;
   final String value;
+  final String labDate;
   final VoidCallback onTap;
-  const DiseaseCard({super.key, required this.title, required this.navPage, required this.value, required this.onTap});
+  const DiseaseCard({
+    super.key,
+    required this.title,
+    required this.navPage,
+    required this.value,
+    required this.labDate,
+    required this.onTap,
+  });
 
   // get the latest lab type date of it.
 
@@ -42,26 +49,14 @@ class DiseaseCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium!,
-                ),
+                Text(title, style: Theme.of(context).textTheme.titleMedium!),
                 const SizedBox(height: 16.0),
-                Text(
-                  value,
-                  style: Theme.of(context).textTheme.titleLarge!,
-                ),
+                Text(value, style: Theme.of(context).textTheme.titleLarge!),
                 const SizedBox(height: 16.0),
-                Text(
-                  'تاریخ انجام: 12/مرداد/1403',
-                  style: Theme.of(context).textTheme.bodySmall!,
-                ),
+                Text(labDate, style: Theme.of(context).textTheme.bodySmall!),
               ],
             ),
-            Text(
-              navPage,
-              style: Theme.of(context).textTheme.titleLarge!,
-            ),
+            Text(navPage, style: Theme.of(context).textTheme.titleLarge!),
             const Icon(Icons.arrow_forward_ios, size: 16),
           ],
         ),
@@ -98,7 +93,7 @@ class LearnMoreCard extends StatelessWidget {
                     color: Colors.black12,
                     blurRadius: 16.0,
                     offset: Offset(0, 2.0),
-                  )
+                  ),
                 ],
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -121,13 +116,15 @@ class LearnMoreCard extends StatelessWidget {
                 height: 100.0,
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.7),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.secondary.withValues(alpha: 0.7),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 16.0,
                       offset: Offset(0, 2.0),
-                    )
+                    ),
                   ],
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -153,6 +150,7 @@ class SmallCardClipper extends CustomClipper<Path> {
     path.close();
     return path;
   }
+
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
@@ -168,6 +166,7 @@ class LargeCardClipper extends CustomClipper<Path> {
     path.close();
     return path;
   }
+
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
@@ -177,7 +176,11 @@ class LargeCardClipper extends CustomClipper<Path> {
 class WeeklyProgressCard extends StatelessWidget {
   final int rating;
   final VoidCallback onTap;
-  const WeeklyProgressCard({super.key, required this.rating, required this.onTap});
+  const WeeklyProgressCard({
+    super.key,
+    required this.rating,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -205,8 +208,12 @@ class WeeklyProgressCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                    Text(langLoc.uiWeeklyProgress,
-                    style: Theme.of(context).textTheme.titleLarge, // CHANGE TO UNIFIED THEME
+                  Text(
+                    langLoc.uiWeeklyProgress,
+                    style:
+                        Theme.of(
+                          context,
+                        ).textTheme.titleLarge, // CHANGE TO UNIFIED THEME
                   ),
                   const SizedBox(height: 8.0),
                   Text(
@@ -225,8 +232,12 @@ class WeeklyProgressCard extends StatelessWidget {
                   CircularProgressIndicator(
                     value: rating / 100, // 0.0 - 1.0
                     strokeWidth: 6.0,
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
-                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.7),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.3),
                   ),
                   Text('$rating10'),
                 ],

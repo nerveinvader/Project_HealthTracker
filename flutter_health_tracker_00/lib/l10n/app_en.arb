@@ -91,5 +91,14 @@
     "contTelegram": "Support Telegram ID",
     "contEmail": "Support EMail Address",
     "contVersion": "App Version",
+	"labHbA1c": "HbA1c",
+	"labFBS": "Fasting Blood Sugar",
+	"labHPP": "2hr Post Prandial",
+	"labChol": "Cholesterol",
+	"labHDL": "HDL",
+	"labLDL": "LDL",
+	"labTG": "Triglyceride",
+	"labSBP": "Systolic Blood Pressure",
+	"labDBP": "Diastolic Blood Pressure",
     "other": "Other"
 }

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../data/local/app_db.dart';
 
-////////////////////////////
+// Fetch latest lab entry for a type of lab.
 Future<LabEntry?> fetchLatestLab(String patientId, String labType) async {
 final appDB = AppDatabase();
 	try {

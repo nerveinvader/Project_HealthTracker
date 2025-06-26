@@ -4,12 +4,12 @@
 // Over selectable time ranges.
 
 /*
-// Input: patientId
-// State: selectedRange, labEntries
-// Lifecycle: initState
-// Controls: Segmented or Toggle
-// Chart: fl_chart LineChart, X = date, Y = Lab
-// Error: No entries, db failure, async gaps, data conversion and localization (date)
+Input: patientId
+State: selectedRange, labEntries
+Lifecycle: initState
+Controls: Segmented or Toggle
+Chart: fl_chart LineChart, X = date, Y = Lab
+Error: No entries, db failure, async gaps, data conversion and localization (date)
 */
 
 import 'dart:math' as math;
@@ -26,7 +26,9 @@ import '../public_classes.dart';
 
 // Chart Lab types
 const List<String> labTypes = [
-  'HbA1c', 'FBS', '2HPP', 'Cholesterol', 'HDL', 'LDL', 'TG', 'SBP', 'DBP'
+  'HbA1c/قندخون سه ماهه', 'FBS/قندخون ناشتا', '2HPP/ قندخون 2 ساعته',
+  'Cholesterol/ کلسترول', 'HDL', 'LDL', 'TG/ تری گلیسرید',
+  'SBP/ فشارخون سیستولیک', 'DBP/ فشارخون دیاستولیک'
 ];
 // Chart Previous Days Range
 enum ChartRange { days7, days14, days30, days90 }
@@ -34,7 +36,7 @@ enum ChartRange { days7, days14, days30, days90 }
 class ChartViewScreen extends StatefulWidget {
   final String patientId;
   final String patientLabType;
-  const ChartViewScreen({super.key, required this.patientId, this.patientLabType = 'HbA1c'});
+  const ChartViewScreen({super.key, required this.patientId, this.patientLabType = 'HbA1c/قندخون سه ماهه'});
 
   @override
   State<ChartViewScreen> createState() => _ChartViewScreenState();

@@ -641,6 +641,60 @@ abstract class AppLocalizations {
   /// **'App Version'**
   String get contVersion;
 
+  /// No description provided for @labHbA1c.
+  ///
+  /// In en, this message translates to:
+  /// **'HbA1c'**
+  String get labHbA1c;
+
+  /// No description provided for @labFBS.
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting Blood Sugar'**
+  String get labFBS;
+
+  /// No description provided for @labHPP.
+  ///
+  /// In en, this message translates to:
+  /// **'2hr Post Prandial'**
+  String get labHPP;
+
+  /// No description provided for @labChol.
+  ///
+  /// In en, this message translates to:
+  /// **'Cholesterol'**
+  String get labChol;
+
+  /// No description provided for @labHDL.
+  ///
+  /// In en, this message translates to:
+  /// **'HDL'**
+  String get labHDL;
+
+  /// No description provided for @labLDL.
+  ///
+  /// In en, this message translates to:
+  /// **'LDL'**
+  String get labLDL;
+
+  /// No description provided for @labTG.
+  ///
+  /// In en, this message translates to:
+  /// **'Triglyceride'**
+  String get labTG;
+
+  /// No description provided for @labSBP.
+  ///
+  /// In en, this message translates to:
+  /// **'Systolic Blood Pressure'**
+  String get labSBP;
+
+  /// No description provided for @labDBP.
+  ///
+  /// In en, this message translates to:
+  /// **'Diastolic Blood Pressure'**
+  String get labDBP;
+
   /// No description provided for @other.
   ///
   /// In en, this message translates to:

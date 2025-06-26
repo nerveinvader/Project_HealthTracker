@@ -4,15 +4,18 @@
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_health_tracker_00/ui/reminder_service.dart';
+import '../../data/local/app_db.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
+
 import 'package:flutter_health_tracker_00/ui/screens/patient_list_screen.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-import '../../data/local/app_db.dart';
+import 'package:flutter_health_tracker_00/ui/reminder_service.dart';
 
 const List<String> labTypes = [
-  'HbA1c', 'FBS', '2HPP', 'Cholesterol', 'HDL', 'LDL', 'TG', 'SBP', 'DBP'
+  'HbA1c/قندخون سه ماهه', 'FBS/قندخون ناشتا', '2HPP/ قندخون 2 ساعته',
+  'Cholesterol/ کلسترول', 'HDL', 'LDL', 'TG/ تری گلیسرید',
+  'SBP/ فشارخون سیستولیک', 'DBP/ فشارخون دیاستولیک'
 ];
 
 class LabEntryFormScreen extends StatefulWidget {

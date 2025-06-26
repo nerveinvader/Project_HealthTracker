@@ -282,5 +282,32 @@ class AppLocalizationsFa extends AppLocalizations {
   String get contVersion => 'نسخه برنامه';
 
   @override
+  String get labHbA1c => 'قند خون سه ماهه';
+
+  @override
+  String get labFBS => 'قند خون ناشتا';
+
+  @override
+  String get labHPP => 'قند خون دو ساعته';
+
+  @override
+  String get labChol => 'کلسترول';
+
+  @override
+  String get labHDL => 'HDL';
+
+  @override
+  String get labLDL => 'LDL';
+
+  @override
+  String get labTG => 'تری گلیسرید';
+
+  @override
+  String get labSBP => 'فشار خون سیستولیک';
+
+  @override
+  String get labDBP => 'فشار خون دیاستولیک';
+
+  @override
   String get other => 'دیگر';
 }

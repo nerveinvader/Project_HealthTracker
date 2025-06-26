@@ -282,5 +282,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contVersion => 'App Version';
 
   @override
+  String get labHbA1c => 'HbA1c';
+
+  @override
+  String get labFBS => 'Fasting Blood Sugar';
+
+  @override
+  String get labHPP => '2hr Post Prandial';
+
+  @override
+  String get labChol => 'Cholesterol';
+
+  @override
+  String get labHDL => 'HDL';
+
+  @override
+  String get labLDL => 'LDL';
+
+  @override
+  String get labTG => 'Triglyceride';
+
+  @override
+  String get labSBP => 'Systolic Blood Pressure';
+
+  @override
+  String get labDBP => 'Diastolic Blood Pressure';
+
+  @override
   String get other => 'Other';
 }
