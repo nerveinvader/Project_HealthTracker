@@ -22,19 +22,20 @@ AI
 Subscription
 
 # Screens in the App for Client Side
-1. Welcome page
+# Some DONE pages are still in need of fine-tuning and final touches.
+1. *** Welcome page
 2. DONE *** Login page
 3. *** OTP page (login code via SMS)
 4. DONE *** Create Profile page
-5. *** Patient Home page (main page to navigate)
-6. Setting page
-7. About Us page
-8. Contact page
-9. *** Add/Edit Medication page (plain text imput for physician to look up)
-10. *** Add/Edit Labs page (has all lab types)
+5. WIP *** Patient Home page (main page to navigate)
+6. DONE *** Setting page
+7. DONE *** About Us page
+8. DONE *** Contact page
+9. WIP *** Add/Edit Medication page (plain text imput for physician to look up)
+10. WIP *** Add/Edit Labs page (has all lab types)
 11. *** Profile Edit page (maybe reuse the same as create_profile page)
-12. *** Chart View page (one for all labs getting data to show)
-13. *** Specific Health Rating page (DM, HTN, HLP with specific labs for each)
+12. DONE *** Chart View page (one for all labs getting data to show)
+13. DONE *** Specific Disease page (DM, HTN, HLP with specific labs for each)
 
 # Screens in the App for Admin Side
 1. Welcome, Login, OTP, Setting, About Us, Contact pages
