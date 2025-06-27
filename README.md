@@ -5,6 +5,9 @@ Health Tracking Application for HTN, DM, HLP
 User types: patient, physician, admin
 Labs: HbA1c, FBS, 2HPP, Lipid Profile, BP (S,D)
 Deploying platform >>> ???
+	[Supabase/Appwrite on Iranian cloud such as Liara or Arvan]
+	[Iranina SMS gateway such as Kavenegar]
+	[Push notification and Analytics such as Pushe or Push-Pole + Metrix]
 Authentication >>> ???
 Patient profile CRUD
 Lab entry
