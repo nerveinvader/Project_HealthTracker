@@ -1,6 +1,26 @@
 # Project_HealthTracker
 Health Tracking Application for HTN, DM, HLP
 
+# High level roadmap:
+User types: patient, physician, admin
+Labs: HbA1c, FBS, 2HPP, Lipid Profile, BP (S,D)
+Deploying platform >>> ???
+Authentication >>> ???
+Patient profile CRUD
+Lab entry
+Med entry
+Screens (
+	Login + Auth, >>> INCOMPLETE
+	Home, Settings, About/Contact, Charts, Disease Dashboard,
+	Add or Edit Lab/Med, Edit Profile, >>> INCOMPLETE!
+)
+# Extra features
+Calorie tracker
+Article recommendation
+Physician interface
+AI
+Subscription
+
 # Screens in the App for Client Side
 1. Welcome page
 2. DONE *** Login page
