@@ -14,6 +14,13 @@ Screens (
 	Home, Settings, About/Contact, Charts, Disease Dashboard,
 	Add or Edit Lab/Med, Edit Profile, >>> INCOMPLETE!
 )
+Metrics (
+	Acquisition (new install + source),
+	Activation (profile and first entry),
+	Engagement (average entries per month)
+	Retention (week and month retention)
+)
+
 # Extra features
 Calorie tracker
 Article recommendation
